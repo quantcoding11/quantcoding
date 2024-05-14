@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899-12-30 00:00:00.000.580,C:\work\kiwoom_project\src\kiwoom_trading.cbproj=C:\work\kiwoom_project\src\kiwoom_trading.cbproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.236,C:\work\kiwoom_project\src\main.dfm=C:\work\kiwoom_project\src\Unit1.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.174,C:\work\kiwoom_project\src\Unit1.cpp=C:\Users\quantcoding\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.174,C:\work\kiwoom_project\src\Unit1.dfm=C:\Users\quantcoding\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.142,C:\work\kiwoom_project\src\kiwoom_tradingPCH1.h=C:\Users\quantcoding\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.205,C:\work\kiwoom_project\src\kiwoom_trading.cbproj=C:\Users\quantcoding\Documents\Embarcadero\Studio\Projects\Project1.cbproj</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.236,C:\work\kiwoom_project\src\main.cpp=C:\work\kiwoom_project\src\Unit1.cpp</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.174,C:\work\kiwoom_project\src\Unit1.h=C:\Users\quantcoding\Documents\Embarcadero\Studio\Projects\Unit1.h</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.236,C:\work\kiwoom_project\src\main.h=C:\work\kiwoom_project\src\Unit1.h</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.269,=C:\Users\quantcoding\Documents\Embarcadero\Studio\Projects\Project1PCH1.h</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.298,=C:\Users\quantcoding\Documents\Embarcadero\Studio\Projects\Unit1.cpp</Transaction>
+  </Transactions>
+</BorlandProject>
