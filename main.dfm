@@ -1,28 +1,31 @@
-object Form1: TForm1
+object FormMain: TFormMain
   Left = 0
   Top = 0
   Caption = 'QunatCoding'
-  ClientHeight = 732
-  ClientWidth = 861
+  ClientHeight = 648
+  ClientWidth = 1006
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
   Font.Name = #44404#47548#52404
   Font.Style = []
+  Menu = MainMenu1
+  Position = poDesktopCenter
+  OnShow = FormShow
   TextHeight = 12
   object Button1: TButton
     Left = 24
-    Top = 96
-    Width = 75
+    Top = 24
+    Width = 121
     Height = 25
-    Caption = #47196#44536#51064
+    Caption = #53412#50880#51613#44428' '#47196#44536#51064
     TabOrder = 0
     OnClick = Button1Click
   end
   object GroupBox1: TGroupBox
     Left = 24
-    Top = 144
+    Top = 72
     Width = 473
     Height = 473
     Caption = #51312#44148' '#44160#49353
@@ -110,28 +113,24 @@ object Form1: TForm1
   end
   object Memo1: TMemo
     Left = 0
-    Top = 643
-    Width = 861
+    Top = 559
+    Width = 1006
     Height = 89
     Align = alBottom
     ScrollBars = ssBoth
     TabOrder = 2
-    ExplicitTop = 547
-    ExplicitWidth = 820
+    ExplicitLeft = 8
+    ExplicitTop = 584
   end
-  object KHOpenAPI1: TKHOpenAPI
-    Left = 24
-    Top = 24
-    Width = 100
-    Height = 50
-    TabOrder = 3
-    OnReceiveTrData = KHOpenAPI1ReceiveTrData
-    OnReceiveRealData = KHOpenAPI1ReceiveRealData
-    OnReceiveChejanData = KHOpenAPI1ReceiveChejanData
-    OnEventConnect = KHOpenAPI1EventConnect
-    OnReceiveInvestRealData = KHOpenAPI1ReceiveInvestRealData
-    OnReceiveTrCondition = KHOpenAPI1ReceiveTrCondition
-    OnReceiveConditionVer = KHOpenAPI1ReceiveConditionVer
-    ControlData = {02000100560A00002B05000000000000}
+  object MainMenu1: TMainMenu
+    Left = 176
+    Top = 32
+    object file1: TMenuItem
+      Caption = 'file'
+      object N1: TMenuItem
+        Caption = #53412#50880' '#54868#47732' '#48372#44592
+        OnClick = N1Click
+      end
+    end
   end
 end

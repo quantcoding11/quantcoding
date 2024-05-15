@@ -128,6 +128,16 @@
         <BCC_UseClassicCompiler>false</BCC_UseClassicCompiler>
     </PropertyGroup>
     <ItemGroup>
+        <CppCompile Include="global.cpp">
+            <DependentOn>global.h</DependentOn>
+            <BuildOrder>4</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="kiwoom_form.cpp">
+            <Form>FormKiwoom</Form>
+            <FormType>dfm</FormType>
+            <DependentOn>kiwoom_form.h</DependentOn>
+            <BuildOrder>3</BuildOrder>
+        </CppCompile>
         <CppCompile Include="kiwoom_trading.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>
@@ -136,12 +146,13 @@
             <PCH>true</PCH>
         </PCHCompile>
         <CppCompile Include="main.cpp">
-            <Form>Form1</Form>
+            <Form>FormMain</Form>
             <FormType>dfm</FormType>
             <DependentOn>main.h</DependentOn>
             <BuildOrder>2</BuildOrder>
         </CppCompile>
         <FormResources Include="main.dfm"/>
+        <FormResources Include="kiwoom_form.dfm"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -224,13 +235,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Win32\Debug\kiwoom_trading.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\bin\kiwoom_trading.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>kiwoom_trading.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Win32\Debug\kiwoom_trading.tds" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName="..\bin\kiwoom_trading.tds" Configuration="Debug" Class="DebugSymbols">
                     <Platform Name="Win32">
                         <RemoteName>kiwoom_trading.tds</RemoteName>
                         <Overwrite>true</Overwrite>

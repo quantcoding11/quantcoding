@@ -4,59 +4,63 @@
 #pragma hdrstop
 
 #include "main.h"
+#include "kiwoom_form.h"
+
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma link "KHOpenAPILib_OCX"
 #pragma resource "*.dfm"
-TForm1* Form1;
+TFormMain* FormMain;
+
+
 //---------------------------------------------------------------------------
-__fastcall TForm1::TForm1(TComponent* Owner) : TForm(Owner) {}
+__fastcall TFormMain::TFormMain(TComponent* Owner) : TForm(Owner) {}
 //---------------------------------------------------------------------------
-void __fastcall TForm1::Button1Click(TObject* Sender)
+
+void __fastcall TFormMain::N1Click(TObject *Sender)
 {
-    //로그인
-    KHOpenAPI1->CommConnect();
+    FormKiwoom->Show();
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::KHOpenAPI1EventConnect(TObject *Sender, long nErrCode)
 
+
+void __fastcall TFormMain::Button1Click(TObject* Sender)
 {
-	if (nErrCode == 0) {
-		AddLog("kiwoom login ok");
-	} else {
-		AddLog("kiwoom login failed ");
-	}
+	//로그인
+	FormKiwoom->Show();
+	FormKiwoom->KHOpenAPI1->CommConnect();
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::Button2Click(TObject* Sender)
+
+void __fastcall TFormMain::Button2Click(TObject* Sender)
 {
 	//조건식 가져오기
 	GridInitList();
 
-	KHOpenAPI1->GetConditionLoad();
+	FormKiwoom->KHOpenAPI1->GetConditionLoad();
 }
 //---------------------------------------------------------------------------
 
 
-WideString __fastcall TForm1::GetScrNum()
+WideString __fastcall TFormMain::GetScrNum()
 {
-    static int iscrum = 5000;
+	static int iscrum = 5000;
 
-    WideString aa;
-    if (iscrum < 5100)
-        iscrum++;
-    else
-        iscrum = 5000;
+	WideString aa;
+	if (iscrum < 5100)
+		iscrum++;
+	else
+		iscrum = 5000;
 
-    aa = IntToStr(iscrum);
-    return aa;
+	aa = IntToStr(iscrum);
+	return aa;
 }
 
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::GridInitList()
+void __fastcall TFormMain::GridInitList()
 {
     //grid update
     //list
@@ -74,7 +78,7 @@ void __fastcall TForm1::GridInitList()
 //---------------------------------------------------------------------------
 
 //내 조건식
-void __fastcall TForm1::UpdateConditionList(String sNo, String sName)
+void __fastcall TFormMain::UpdateConditionList(String sNo, String sName)
 {
     //grid update
     TStringGrid* pGrid = StringGridList;
@@ -92,7 +96,7 @@ void __fastcall TForm1::UpdateConditionList(String sNo, String sName)
 
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::GridInitItem()
+void __fastcall TFormMain::GridInitItem()
 {
     //grid update
     //list
@@ -111,11 +115,11 @@ void __fastcall TForm1::GridInitItem()
 }
 //---------------------------------------------------------------------------
 //내 조건식
-void __fastcall TForm1::UpdateConditionItem(String sNo, String sConditionName, String sCode)
+void __fastcall TFormMain::UpdateConditionItem(String sNo, String sConditionName, String sCode)
 {
 	String sName;
 	//종목 코드로 종목 이름을 가져온다
-	sName = KHOpenAPI1->GetMasterCodeName(sCode);
+	sName = FormKiwoom->KHOpenAPI1->GetMasterCodeName(sCode);
 
 
     //grid update
@@ -136,7 +140,7 @@ void __fastcall TForm1::UpdateConditionItem(String sNo, String sConditionName, S
 
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::RequestCondition(String sNo, String sName)
+void __fastcall TFormMain::RequestCondition(String sNo, String sName)
 {
     WideString scrum = GetScrNum();
     WideString wCondition;
@@ -146,12 +150,12 @@ void __fastcall TForm1::RequestCondition(String sNo, String sName)
     wCondition = sName;
     index = StrToInt(sNo);
 
-    //BSTR
-    KHOpenAPI1->SendCondition(scrum.c_bstr(), wCondition.c_bstr(), index, 0);
+
+    FormKiwoom->KHOpenAPI1->SendCondition(scrum.c_bstr(), wCondition.c_bstr(), index, 0);
 }
 
 //---------------------------------------------------------------------------
-void __fastcall TForm1::StringGridListClick(TObject* Sender)
+void __fastcall TFormMain::StringGridListClick(TObject* Sender)
 {
     m_sSelectCondition = StringGridList->Cells[1][m_iSelectRowList];
     if (m_sSelectCondition != "") {
@@ -160,7 +164,7 @@ void __fastcall TForm1::StringGridListClick(TObject* Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::Button3Click(TObject* Sender)
+void __fastcall TFormMain::Button3Click(TObject* Sender)
 {
 	//조건검색
 	String sNo, sName;
@@ -184,8 +188,8 @@ void __fastcall TForm1::Button3Click(TObject* Sender)
     wCondition = sName;
     index = StrToInt(sNo);
 
-	//iReturn = KHOpenAPI1->SendCondition(scrum, wCondition, index, 0); //조건
-	iReturn = KHOpenAPI1->SendCondition(scrum, wCondition, index, 1);//조건 +실시간
+	iReturn = FormKiwoom->KHOpenAPI1->SendCondition(scrum, wCondition, index, 0); //조건
+
 
 	if(iReturn == 0){
 		//요청한 조건식이 없거나 조건 고유번호와 조건명이 서로 안맞거나 조회횟수를 초과하는 경우 실패하게 됩니다.
@@ -195,132 +199,36 @@ void __fastcall TForm1::Button3Click(TObject* Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TForm1::StringGridListSelectCell(
+void __fastcall TFormMain::StringGridListSelectCell(
     TObject* Sender, int ACol, int ARow, bool &CanSelect)
 {
     m_iSelectRowList = ARow;
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm1::AddLog(String sMsg)
+void __fastcall TFormMain::AddLog(String sMsg)
 {
-    Memo1->Lines->Add(sMsg);
+	Memo1->Lines->Add(sMsg);
+
+    DebugLog("main", sMsg);
 }
 //---------------------------------------------------------------------------
 
 
-void __fastcall TForm1::KHOpenAPI1ReceiveChejanData(TObject *Sender, WideString sGubun,
-          long nItemCnt, WideString sFIdList)
+void __fastcall TFormMain::FormShow(TObject *Sender)
 {
-//
-}
-//---------------------------------------------------------------------------
+	g_AppDir = ExtractFilePath(Application->ExeName);
 
-void __fastcall TForm1::KHOpenAPI1ReceiveConditionVer(TObject *Sender, long lRet,
-          WideString sMsg)
-{
+	WideString sPath;
+	sPath = "Log";
+	CreateDirectory(sPath.c_bstr(), NULL);
 
 
-	//조건식
-
-	if(lRet != 1){
-        AddLog("조회 실패");
-	}
-
-    String conditionList;
-
-    //조건식 결과
-    conditionList = KHOpenAPI1->GetConditionNameList();
-
-    //    001^abc;002^abc;000^abc
-
-    TStringList* SL = new TStringList;
-    int iLine;
-
-    try {
-		SL->Delimiter = ';';
-        SL->DelimitedText = conditionList;
-
-        iLine = SL->Count - 1;
-        for (int i = 0; i < iLine; i++) {
-            TStringList* temp = new TStringList;
-
-            temp->Delimiter = '^';
-            temp->DelimitedText = SL->Strings[i];
-
-            UpdateConditionList(temp->Strings[0], temp->Strings[1]);
-
-            delete temp;
-        }
-    } __finally
-    {
-        delete SL;
-	}
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::KHOpenAPI1ReceiveInvestRealData(TObject *Sender, WideString sRealKey)
-
-{
-//
-}
-//---------------------------------------------------------------------------
+	Sleep(100);
+	sPath = "Log\\" + Now().FormatString("yyyymmdd");
+	CreateDirectory(sPath.c_bstr(), NULL);
 
 
 
-void __fastcall TForm1::KHOpenAPI1ReceiveRealData(TObject *Sender, WideString sRealKey,
-          WideString sRealType, WideString sRealData)
-{
-//
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::KHOpenAPI1ReceiveTrCondition(TObject *Sender, WideString sScrNo,
-          WideString strCodeList, WideString strConditionName, int nIndex,
-          int nNext)
-{
-	//조건 종목
-
-    TStringList* SL = new TStringList;
-    int iLine;
-
-	//종목코드 리스트는 각 종목코드가 ';'로 구분되서 전달됩니다.
-
-    WideString sCode;
-    WideString sName;
-
-	try {
-        SL->Delimiter = ';';
-        SL->DelimitedText = strCodeList;
-
-        iLine = SL->Count;
-
-        for (int i = 0; i < iLine; i++) {
-            if (SL->Strings[i] != "") {
-                sCode = SL->Strings[i];
-
-
-				UpdateConditionItem(IntToStr(i), strConditionName, sCode);
-            }
-        }
-    } __finally
-    {
-        delete SL;
-    }
-
-    if (nIndex == 2) { //남아있다
-        KHOpenAPI1->SendCondition(sScrNo, strConditionName, m_iSelectIndex, 0);
-    } else {
-
-    }
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TForm1::KHOpenAPI1ReceiveTrData(TObject *Sender, WideString sScrNo,
-          WideString sRQName, WideString sTrCode, WideString sRecordName,
-          WideString sPrevNext, long nDataLength, WideString sErrorCode,
-          WideString sMessage, WideString sSplmMsg)
-{
-//
 }
 //---------------------------------------------------------------------------
 
