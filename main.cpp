@@ -5,6 +5,7 @@
 
 #include "main.h"
 #include "kiwoom_form.h"
+#include "kiwoom_thread.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -14,7 +15,10 @@ TFormMain* FormMain;
 
 
 //---------------------------------------------------------------------------
-__fastcall TFormMain::TFormMain(TComponent* Owner) : TForm(Owner) {}
+__fastcall TFormMain::TFormMain(TComponent* Owner) : TForm(Owner)
+{
+	g_bClosing = false;
+}
 //---------------------------------------------------------------------------
 
 void __fastcall TFormMain::N1Click(TObject *Sender)
@@ -23,7 +27,11 @@ void __fastcall TFormMain::N1Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-
+void __fastcall TFormMain::FormCloseQuery(TObject *Sender, bool &CanClose)
+{
+	g_bClosing = true;
+}
+//---------------------------------------------------------------------------
 
 void __fastcall TFormMain::Button1Click(TObject* Sender)
 {
@@ -228,9 +236,15 @@ void __fastcall TFormMain::FormShow(TObject *Sender)
 	CreateDirectory(sPath.c_bstr(), NULL);
 
 
+	//kiwoom thread start
+	g_ThreadKiwoom = new ThreadKiwoom(true);
+	g_ThreadKiwoom->Start();
+
+
 
 }
 //---------------------------------------------------------------------------
+
 
 
 

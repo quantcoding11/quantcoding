@@ -138,6 +138,10 @@
             <DependentOn>kiwoom_form.h</DependentOn>
             <BuildOrder>3</BuildOrder>
         </CppCompile>
+        <CppCompile Include="kiwoom_thread.cpp">
+            <DependentOn>kiwoom_thread.h</DependentOn>
+            <BuildOrder>5</BuildOrder>
+        </CppCompile>
         <CppCompile Include="kiwoom_trading.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>
@@ -145,6 +149,10 @@
             <BuildOrder>1</BuildOrder>
             <PCH>true</PCH>
         </PCHCompile>
+        <CppCompile Include="LIstStock.cpp">
+            <DependentOn>LIstStock.h</DependentOn>
+            <BuildOrder>6</BuildOrder>
+        </CppCompile>
         <CppCompile Include="main.cpp">
             <Form>FormMain</Form>
             <FormType>dfm</FormType>

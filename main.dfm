@@ -12,6 +12,7 @@ object FormMain: TFormMain
   Font.Style = []
   Menu = MainMenu1
   Position = poDesktopCenter
+  OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   TextHeight = 12
   object Button1: TButton
@@ -119,12 +120,12 @@ object FormMain: TFormMain
     Align = alBottom
     ScrollBars = ssBoth
     TabOrder = 2
-    ExplicitLeft = 8
-    ExplicitTop = 584
+    ExplicitTop = 558
+    ExplicitWidth = 1002
   end
   object MainMenu1: TMainMenu
-    Left = 176
-    Top = 32
+    Left = 168
+    Top = 16
     object file1: TMenuItem
       Caption = 'file'
       object N1: TMenuItem

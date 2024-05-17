@@ -8,7 +8,7 @@
 #pragma package(smart_init)
 
 String g_AppDir;
-
+bool g_bClosing;
 String g_sKiwoomAcountNo;
 
 //---------------------------------------------------------------------------

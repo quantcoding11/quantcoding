@@ -34,6 +34,7 @@ __published:	// IDE-managed Components
 	void __fastcall StringGridListSelectCell(TObject *Sender, int ACol, int ARow, bool &CanSelect);
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall N1Click(TObject *Sender);
+	void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
 
 
 
