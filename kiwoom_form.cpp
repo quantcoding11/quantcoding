@@ -214,8 +214,7 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveChejanData(
     AnsiString sType;
     AnsiString sTradePrice;
     AnsiString sTradeVolume;
-    AnsiString sTradeVolumeSplit;
-    AnsiString sOrderVolume;
+	AnsiString sOrderVolume;
 
     AnsiString sTotalVolume;
     AnsiString sHoldVolume;
@@ -235,7 +234,6 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveChejanData(
 
         sTradePrice = KHOpenAPI1->GetChejanData(910);
         sTradeVolume = KHOpenAPI1->GetChejanData(911);
-        sTradeVolumeSplit = KHOpenAPI1->GetChejanData(915);
 
         sOrderVolume = KHOpenAPI1->GetChejanData(900); //주문수량
 
@@ -246,20 +244,17 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveChejanData(
 
 			if (sResult == "체결") {
 
-				UpdateStockInfo(sStockCode, sStockName, sOrderCode, 2, sType, sTradePrice, sTradeVolume,
-					sTradeVolumeSplit, sOrderVolume);
+				UpdateStockInfo(sStockCode, sStockName, sOrderCode, 2, sType, sTradePrice, sTradeVolume, sOrderVolume);
 
 			}
 			else if (sResult == "접수") { //매수,매도 접수
 
-				UpdateStockInfo(sStockCode, sStockName, sOrderCode, 0, sType, sTradePrice, sTradeVolume,
-					sTradeVolumeSplit, sOrderVolume);
+				UpdateStockInfo(sStockCode, sStockName, sOrderCode, 0, sType, sTradePrice, sTradeVolume, sOrderVolume);
 
 			}
 			else if (sResult == "확인") { //매수, 매도 정정. 매수, 매도취소.
 
-                UpdateStockInfo(sStockCode, sStockName, sOrderCode, 1, sType, sTradePrice, sTradeVolume,
-                    sTradeVolumeSplit, sOrderVolume);
+				UpdateStockInfo(sStockCode, sStockName, sOrderCode, 1, sType, sTradePrice, sTradeVolume, sOrderVolume);
             }
 
 		}
@@ -282,6 +277,7 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveInvestRealData(
 void __fastcall TFormKiwoom::KHOpenAPI1ReceiveMsg(TObject* Sender,
     WideString sScrNo, WideString sRQName, WideString sTrCode, WideString sMsg)
 {
+    FormMain->AddLog("msg");
 	FormMain->AddLog(sRQName);
     FormMain->AddLog(sTrCode);
     FormMain->AddLog(sMsg);
@@ -299,7 +295,7 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveTrData(TObject* Sender,
     WideString sErrorCode, WideString sMessage, WideString sSplmMsg)
 {
     //
-
+	FormMain->AddLog("tr");
     FormMain->AddLog(sRQName);
     FormMain->AddLog(sMessage);
 
@@ -582,8 +578,7 @@ void __fastcall TFormKiwoom::Button6Click(TObject* Sender)
 //---------------------------------------------------------------------------
 
 void __fastcall TFormKiwoom::UpdateStockInfo(String sStockCode, String sStockName, String sOrderCode,
-	int iStatus, String sType, String sTradePrice, String sTradeVolume, String sTradeVolumeSplit,
-	String sOrderVolume)
+	int iStatus, String sType, String sTradePrice, String sTradeVolume, String sOrderVolume)
 {
 
     switch (iStatus) {
@@ -594,8 +589,13 @@ void __fastcall TFormKiwoom::UpdateStockInfo(String sStockCode, String sStockNam
             //접수(new order code) - 확인(new order code) - 접수(old order code)
             //마지막에 접수에서 처리된 order code를 사용하면 안됨
 
-            if (StrToInt(sOrderCode) > StrToInt(m_sOrderNo)) { //새로운 order code만 사용
-                m_sOrderNo = sOrderCode;
+			if(m_sOrderNo != ""){
+				if (StrToInt(sOrderCode) > StrToInt(m_sOrderNo)) { //새로운 order code만 사용
+					m_sOrderNo = sOrderCode;
+				}
+			}
+			else{
+				m_sOrderNo = sOrderCode;
             }
 
 			FormMain->AddLog("접수 : " + sStockCode + " " + sStockName +  ", order code:" + sOrderCode +

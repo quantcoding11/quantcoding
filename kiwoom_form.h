@@ -79,8 +79,7 @@ public:		// User declarations
 	int __fastcall SellCancel(String sStockCode, String sOrderNo, int iVolume);
 
     void __fastcall UpdateStockInfo(String sStockCode, String sStockName, String sOrderCode,
-		int iStatus, String sType, String sTradePrice, String sTradeVolume, String sTradeVolumeSplit,
-		String sOrderVolume);
+		int iStatus, String sType, String sTradePrice, String sTradeVolume, String sOrderVolume);
 	void __fastcall UpdateStockVolume(String sStockCode, String sStockName, String sTotalVolume, String sHoldVolume);
 
 

@@ -20,7 +20,12 @@ __fastcall TFormMain::TFormMain(TComponent* Owner) : TForm(Owner)
 	g_bClosing = false;
 }
 //---------------------------------------------------------------------------
+__fastcall TFormMain::~TFormMain()
+{
+    delete g_StockList;
 
+}
+//---------------------------------------------------------------------------
 void __fastcall TFormMain::N1Click(TObject *Sender)
 {
     FormKiwoom->Show();
@@ -235,6 +240,8 @@ void __fastcall TFormMain::FormShow(TObject *Sender)
 	sPath = "Log\\" + Now().FormatString("yyyymmdd");
 	CreateDirectory(sPath.c_bstr(), NULL);
 
+
+	g_StockList = new TStocks();
 
 	//kiwoom thread start
 	g_ThreadKiwoom = new ThreadKiwoom(true);

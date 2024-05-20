@@ -124,8 +124,8 @@ object FormMain: TFormMain
     ExplicitWidth = 1002
   end
   object MainMenu1: TMainMenu
-    Left = 168
-    Top = 16
+    Left = 200
+    Top = 24
     object file1: TMenuItem
       Caption = 'file'
       object N1: TMenuItem

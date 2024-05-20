@@ -32,7 +32,7 @@ object FormKiwoom: TFormKiwoom
     Top = 104
     Width = 249
     Height = 313
-    Caption = #47588#47588' ('#54632#49688#54840#52636')'
+    Caption = #51452#47928' ('#54632#49688#54840#52636')'
     TabOrder = 1
     object Label1: TLabel
       Left = 16

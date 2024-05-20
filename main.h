@@ -67,6 +67,7 @@ public:		// User declarations
 	void __fastcall AddLog(String sMsg);
 
 	__fastcall TFormMain(TComponent* Owner);
+    __fastcall ~TFormMain();
 };
 //---------------------------------------------------------------------------
 
