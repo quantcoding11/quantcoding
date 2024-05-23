@@ -26,7 +26,7 @@ object FormMain: TFormMain
   end
   object GroupBox1: TGroupBox
     Left = 24
-    Top = 72
+    Top = 80
     Width = 473
     Height = 473
     Caption = #51312#44148' '#44160#49353

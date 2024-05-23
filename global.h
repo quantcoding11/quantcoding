@@ -6,7 +6,7 @@
 
 #include <vcl.h>
 
-
+//iTradeStatus À¯Çü
 
 #define _BUY_READY_0				0
 

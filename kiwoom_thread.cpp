@@ -46,6 +46,11 @@ void __fastcall ThreadKiwoom::Execute()
 					BuySellLogic(object);
 				}
 
+
+				//매수, 매도 모니터
+
+
+
 			}
 
 			WaitForSingleObject((void*)this->Handle, 100);
@@ -66,7 +71,7 @@ void __fastcall ThreadKiwoom::BuySellLogic(TStock* object)
 			object->iBoughtVolume = 0;
 
 			// 지정가 매수
-			FormKiwoom->BuyStock(object->sStockCode, object->iBuyTarget, object->iBuyVolume);
+			FormKiwoom->BuyStock(object->sStockCode, object->iBuyTargetPrice, object->iBuyTargetVolume);
 
 
 			break;
@@ -75,33 +80,33 @@ void __fastcall ThreadKiwoom::BuySellLogic(TStock* object)
 		object->iTradeStatus = _SELL_NEW_ACCEPTING_20;
 
 		// 매수 완료 목표가로 지정가 매도
-		FormKiwoom->SellStock(object->sStockCode, object->sOrderCode, object->iSellTarget, object->iSellVolume);
+		FormKiwoom->SellStock(object->sStockCode, object->sOrderCode, object->iSellTargetPrice, object->iSellTargetVolume);
 
 		break;
 
 	case _BUY_MODIFY_5://매수정정
 		object->iTradeStatus = _BUY_MODIFY_ING_50;
 
-		FormKiwoom->BuyChange(object->sStockCode, object->sOrderCode,object->iBuyTarget, object->iBuyVolume);
+		FormKiwoom->BuyChange(object->sStockCode, object->sOrderCode,object->iBuyTargetPrice, object->iBuyTargetVolume);
 
 		break;
 	case _SELL_CANCEL_4:
         object->iTradeStatus = _SELL_CANCEL_ING_40;
 
-		FormKiwoom->SellCancel(object->sStockCode, object->sOrderCode, object->iSellVolume);
+		FormKiwoom->SellCancel(object->sStockCode, object->sOrderCode, object->iSellTargetVolume);
 
 
 		break;
 	case _BUY_CANCEL_3:
 		object->iTradeStatus = _BUY_CANCEL_ING_30;
 
-		FormKiwoom->BuyCancel(object->sStockCode, object->sOrderCode, object->iBuyVolume);
+		FormKiwoom->BuyCancel(object->sStockCode, object->sOrderCode, object->iBuyTargetVolume);
 
 		break;
 	case _SELL_MODIFY_6: // 매도정정
 		object->iTradeStatus = _SELL_MODIFY_ING_60;
 
-		FormKiwoom->SellChange(object->sStockCode, object->sOrderCode, object->iSellTarget, object->iSellVolume);
+		FormKiwoom->SellChange(object->sStockCode, object->sOrderCode, object->iSellTargetPrice, object->iSellTargetVolume);
 
 		break;
 
@@ -113,7 +118,7 @@ void __fastcall ThreadKiwoom::BuySellLogic(TStock* object)
 		object->iTradeStatus = _BUY_IMMEDIATE_ING_72;
 		object->iBoughtVolume = 0;
 
-		FormKiwoom->BuyStockMarketPrice(object->sStockCode, object->iBuyVolume);
+		FormKiwoom->BuyStockMarketPrice(object->sStockCode, object->iBuyTargetVolume);
 
 
 		break;
@@ -122,7 +127,7 @@ void __fastcall ThreadKiwoom::BuySellLogic(TStock* object)
 		object->iTradeStatus = _SELL_IMMEDIATE_82;
 
 		//즉시매도
-		FormKiwoom->SellStockMarketPrice(object->sStockCode, object->sOrderCode, object->iSellVolume);
+		FormKiwoom->SellStockMarketPrice(object->sStockCode, object->sOrderCode, object->iSellTargetVolume);
 
 		break;
 	}
@@ -134,17 +139,31 @@ void __fastcall ThreadKiwoom::BuySellLogic(TStock* object)
 
 
 void __fastcall ThreadKiwoom::UpdateStockInfo(String sStockCode, String sStockName, String sOrderCode,
-	int iStatus, String sType, String sTradePrice, String sTradeVolume, String sTradeVolumeSplit,
-	String sOrderVolume)
+	int iStatus, String sType, String sTradePrice, String sTradeVolume, String sOrderVolume)
 {
 
 	TStock* object;
+
+
 
 
 	for (int i = 0; i < g_StockList->objectList->Count; i++) {
 		object = (TStock*)g_StockList->objectList->Items[i];
 
 		if (object->sStockCode == sStockCode) {
+
+
+			if(sOrderCode != ""){
+				if(object->sOrderCode != ""){
+					if (StrToInt(sOrderCode) > StrToInt(object->sOrderCode)) { //새로운 order code만 사용
+						object->sOrderCode = sOrderCode;
+					}
+				}
+				else{
+					object->sOrderCode = sOrderCode;
+				}
+			}
+
 
 			switch (iStatus) {
 				case 0: // "접수"
@@ -154,9 +173,6 @@ void __fastcall ThreadKiwoom::UpdateStockInfo(String sStockCode, String sStockNa
 					//접수(new order code) - 확인(new order code) - 접수(old order code)
 					//마지막에 접수에서 처리된 order code를 사용하면 안됨
 
-					if (StrToInt(sOrderCode) > StrToInt(object->sOrderCode)) { //새로운 order code만 사용
-						object->sOrderCode = sOrderCode;
-					}
 
 					FormMain->AddLog("접수 : " + sStockCode + " " + sStockName +  ", order code:" + sOrderCode +
 									 ", last order code:" + object->sOrderCode);
@@ -220,26 +236,26 @@ void __fastcall ThreadKiwoom::UpdateStockVolume(String sStockCode,
 
 		if (object->sStockCode == sStockCode) {
 
-			if(object->bSellTry == false){
+			if(object->bSellTry == false){//매도 시도 한적이 없다면, 매수 volume 변화
 				//매수 수량이 다르다
 
 				if(object->iBoughtVolume != iTotalVolume){
 
-					FormMain->AddLog("bought 수량 조절 !! : " + object->sStockCode + " " + object->sStockName +
-						", ready:"+ IntToStr(object->iBuyVolume) + ", bought:"+ IntToStr(object->iBoughtVolume) +" => "+
+					FormMain->AddLog("bought 수량 조절 : " + object->sStockCode + " " + object->sStockName +
+						", ready:"+ IntToStr(object->iBuyTargetVolume) + ", bought:"+ IntToStr(object->iBoughtVolume) +" => "+
 						IntToStr(iTotalVolume));
 
 
 					object->iBoughtVolume = iTotalVolume;
 				}
 			}
-			else{
+			else{//매도 volume 변화
 				//매도 수량이 다르다
 
 				if(object->iSoldVolume != iTotalVolume){
 
-					FormMain->AddLog("sold 수량 조절 !! : " + object->sStockCode + " " + object->sStockName +
-						", ready:"+ IntToStr(object->iSellVolume) + ", bought:"+ IntToStr(object->iSoldVolume) +" => "+
+					FormMain->AddLog("sold 수량 조절 : " + object->sStockCode + " " + object->sStockName +
+						", ready:"+ IntToStr(object->iSellTargetVolume) + ", bought:"+ IntToStr(object->iSoldVolume) +" => "+
 						IntToStr(iTotalVolume));
 
 

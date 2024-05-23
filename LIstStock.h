@@ -22,16 +22,29 @@ public:
 
 	String sOrderCode;
 
-	int iBuyTarget;
-	int iBuyVolume;
-	int iSellTarget;
-	int iSellVolume;
+	//tr 조회
+	int iNowMoney;
+	double dNowRatio;
+
+	//real 조회
+	int iRealMoney;
+	double dRealRatio;
+	int iRealTradeMoney;
+	int iRealMedo1;
+	int iRealMesu1;
+	double dRealChegyul;
+
+	int iBuyTargetPrice;
+	int iBuyTargetVolume;
+	int iSellTargetPrice;
+	int iSellTargetVolume;
 
 	int iBoughtVolume;
 	int iBoughtMoney;
 
 	int iSoldVolume;
 	int iSoldMoney;
+
 
 	bool bSellTry;
 

@@ -11,6 +11,7 @@
 #include <Vcl.OleCtrls.hpp>
 
 #include "global.h"
+#include "ListStock.h"
 //---------------------------------------------------------------------------
 class TFormKiwoom : public TForm
 {
@@ -31,6 +32,27 @@ __published:	// IDE-managed Components
 	TButton *Button5;
 	TButton *Button6;
 	TMemo *Memo1;
+	TGroupBox *GroupBox1;
+	TLabel *Label4;
+	TLabel *Label5;
+	TLabel *Label6;
+	TEdit *EditStockCode2;
+	TEdit *EditPrice2;
+	TCheckBox *CheckBoxMarketPrice2;
+	TEdit *EditVolume2;
+	TButton *Button7;
+	TButton *Button8;
+	TButton *Button9;
+	TButton *Button10;
+	TButton *Button11;
+	TButton *Button12;
+	TButton *Button13;
+	TEdit *EditObject;
+	TGroupBox *GroupBox3;
+	TButton *Button16;
+	TButton *Button15;
+	TButton *Button14;
+	TButton *Button17;
 	void __fastcall KHOpenAPI1EventConnect(TObject *Sender, long nErrCode);
 	void __fastcall KHOpenAPI1ReceiveConditionVer(TObject *Sender, long lRet, WideString sMsg);
 	void __fastcall KHOpenAPI1ReceiveTrCondition(TObject *Sender, WideString sScrNo,
@@ -53,6 +75,17 @@ __published:	// IDE-managed Components
 	void __fastcall Button6Click(TObject *Sender);
 	void __fastcall KHOpenAPI1ReceiveMsg(TObject *Sender, WideString sScrNo, WideString sRQName,
           WideString sTrCode, WideString sMsg);
+	void __fastcall Button7Click(TObject *Sender);
+	void __fastcall Button8Click(TObject *Sender);
+	void __fastcall Button9Click(TObject *Sender);
+	void __fastcall Button10Click(TObject *Sender);
+	void __fastcall Button11Click(TObject *Sender);
+	void __fastcall Button12Click(TObject *Sender);
+	void __fastcall Button13Click(TObject *Sender);
+	void __fastcall Button15Click(TObject *Sender);
+	void __fastcall Button14Click(TObject *Sender);
+	void __fastcall Button16Click(TObject *Sender);
+	void __fastcall Button17Click(TObject *Sender);
 
 
 
@@ -82,6 +115,11 @@ public:		// User declarations
 		int iStatus, String sType, String sTradePrice, String sTradeVolume, String sOrderVolume);
 	void __fastcall UpdateStockVolume(String sStockCode, String sStockName, String sTotalVolume, String sHoldVolume);
 
+
+	void __fastcall RequestExpectTop(int index);
+	void __fastcall RequestTradeMoneyTop(int index);
+
+	void __fastcall RequestRealTimeData(String sStockCode);
 
 	__fastcall TFormKiwoom(TComponent* Owner);
 };
