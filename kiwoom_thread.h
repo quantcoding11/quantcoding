@@ -25,6 +25,9 @@ public:
 	void __fastcall UpdateStockVolume(String sStockCode,
 		String sStockName, String sTotalVolume, String sHoldVolume);
 
+	void __fastcall UpdateRealData(String sStockCode, String sTime, String sRealMoney, String sRealRatio,
+	String sRealTradeMoney, String sRealVolume, String sRealMedo1, String sRealMesu1, String sRealChegyul);
+
 	__fastcall ThreadKiwoom(bool CreateSuspended);
 };
 //---------------------------------------------------------------------------

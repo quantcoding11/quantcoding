@@ -30,9 +30,20 @@ public:
 	int iRealMoney;
 	double dRealRatio;
 	int iRealTradeMoney;
+	int iRealVolume;
 	int iRealMedo1;
 	int iRealMesu1;
 	double dRealChegyul;
+	int iRealTradeMoneyOLD;
+
+	//1초처리
+	int iRealNowSec;
+	int iReal1SecChanged;
+	int iReal1SecMesuSum;//1백만원단위
+	int iReal1SecMedoSum;
+	int iReal1SecTradeMoney[10];
+	double dReal1SecRatio[10];
+
 
 	int iBuyTargetPrice;
 	int iBuyTargetVolume;
@@ -47,6 +58,7 @@ public:
 
 
 	bool bSellTry;
+
 
 
 };

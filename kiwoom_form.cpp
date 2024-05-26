@@ -296,39 +296,34 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveRealData(TObject* Sender,
 	TStock* object;
 
 	String sRealMoney;
+	String sRealTime;
 	String sRealRatio;
 	String sRealTradeMoney;
+	String sRealVolume;
 	String sRealMedo1;
 	String sRealMesu1;
 	String sRealChegyul;
 
 
+
 	if(sRealType == "주식체결"){
 
+
 		sRealMoney 		= KHOpenAPI1->GetCommRealData(sRealKey, 10);
+		sRealTime       = KHOpenAPI1->GetCommRealData(sRealKey, 20);
 		sRealRatio 		= KHOpenAPI1->GetCommRealData(sRealKey, 12);
 		sRealTradeMoney = KHOpenAPI1->GetCommRealData(sRealKey, 14);
+		sRealVolume     = KHOpenAPI1->GetCommRealData(sRealKey, 15);
 		sRealMedo1 		= KHOpenAPI1->GetCommRealData(sRealKey, 27);
 		sRealMesu1 		= KHOpenAPI1->GetCommRealData(sRealKey, 28);
 		sRealChegyul 	= KHOpenAPI1->GetCommRealData(sRealKey, 228);
 
 
+		//update
+		g_ThreadKiwoom->UpdateRealData(sRealKey, sRealTime, sRealMoney, sRealRatio,
+			sRealTradeMoney, sRealVolume, sRealMedo1, sRealMesu1, sRealChegyul);
 
-		for (int i = 0; i < g_StockList->objectList->Count; i++) {
-			object = (TStock*)g_StockList->objectList->Items[i];
 
-			if(object->sStockCode == sRealKey){
-
-				object->iRealMoney = StrToInt(sRealMoney);
-				object->dRealRatio = StrToFloat(sRealRatio);
-				object->iRealTradeMoney = StrToInt(sRealTradeMoney);
-				object->iRealMedo1 = StrToInt(sRealMedo1);
-				object->iRealMesu1 = StrToInt(sRealMesu1);
-				object->dRealChegyul = StrToFloat(sRealChegyul);
-
-			}
-
-		}
 
 	}
 
@@ -1192,7 +1187,7 @@ void __fastcall TFormKiwoom::Button17Click(TObject *Sender)
 	for (int i = 0; i < g_StockList->objectList->Count; i++) {
 		object = (TStock*)g_StockList->objectList->Items[i];
 
-        RequestRealTimeData(object->sStockCode);
+		RequestRealTimeData(object->sStockCode);
 	}
 }
 //---------------------------------------------------------------------------
@@ -1230,13 +1225,13 @@ void __fastcall TFormKiwoom::RequestRealTimeData(String sStockCode)
 
 	static int iFirst = 0;//처음은 0, 이후부터는 1
 
-	WideString scrum = "9000";
+	WideString scrum = "9000";//고정
 	WideString sCode;
 	WideString sFID;
 	WideString sType;
 
 	sCode = sStockCode;
-	sFID = "9001;10;12;14;27;28;228";
+	sFID = "9001;20;10;12;14;15;27;28;228";
 	sType = IntToStr(iFirst);
 
 	int iRtn;
@@ -1253,3 +1248,4 @@ void __fastcall TFormKiwoom::RequestRealTimeData(String sStockCode)
 
 
 //---------------------------------------------------------------------------
+

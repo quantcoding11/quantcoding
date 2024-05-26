@@ -271,3 +271,164 @@ void __fastcall ThreadKiwoom::UpdateStockVolume(String sStockCode,
 }
 
 // ---------------------------------------------------------------------------
+void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, String sRealMoney, String sRealRatio,
+	String sRealTradeMoney, String sRealVolume, String sRealMedo1, String sRealMesu1, String sRealChegyul)
+{
+
+	String sRatio;
+	String sChegyul;
+
+	TStock* object;
+
+	int iRealMoney;
+	double dRealRatio;
+	int iRealTradeMoney;
+	int iRealVolume;
+	int iRealMedo1;
+	int iRealMesu1;
+	double dRealChegyul;
+	int iSign;
+
+	double dRatioDelta;
+	int i10SecTMoney;
+	String sTemp1;
+	TDateTime dtNow;
+	int iNowSec;
+
+
+	dtNow = Now();
+	iNowSec = dtNow.FormatString("hhmmss").ToInt();
+
+	iRealMoney = StrToInt(sRealMoney);
+	dRealRatio = StrToFloat(sRealRatio);
+	iRealTradeMoney = StrToInt(sRealTradeMoney);
+	iRealVolume = StrToInt(sRealVolume);
+	iRealMedo1 = StrToInt(sRealMedo1);
+	iRealMesu1 = StrToInt(sRealMesu1);
+	dRealChegyul = StrToFloat(sRealChegyul);
+
+
+	for (int i = 0; i < g_StockList->objectList->Count; i++) {
+		object = (TStock*)g_StockList->objectList->Items[i];
+
+		if(object->sStockCode == sStockCode){
+
+			if(iRealVolume > 0){
+				iSign = 1;//매수
+			}
+			else{
+				iSign = -1;//매도
+            }
+
+			//iRealVolume 을 양수처리
+			if(iRealVolume < 0){
+				iRealVolume = iRealVolume *-1;
+			}
+
+            //iRealMoney 을 양수처리
+			if(iRealMoney < 0){
+				iRealMoney = iRealMoney *-1;
+			}
+
+			//real data
+			object->iRealMoney = iRealMoney;
+			object->dRealRatio = dRealRatio;
+			object->iRealTradeMoney = iRealTradeMoney;
+			object->iRealVolume = iRealVolume;
+			object->iRealMedo1 = iRealMedo1;
+			object->iRealMesu1 = iRealMesu1;
+			object->dRealChegyul = dRealChegyul;
+
+
+			//1sec changed
+			if(object->iRealNowSec != iNowSec){
+				object->iRealNowSec = iNowSec;
+
+
+				//-
+                //1초 거래대금
+				for(int k=9; k>=1; k--){
+					object->iReal1SecTradeMoney[k] = object->iReal1SecTradeMoney[k-1];
+				}
+
+                //매수 강세명 +, 매도 강세면 -
+				object->iReal1SecTradeMoney[0] = object->iReal1SecMesuSum - object->iReal1SecMedoSum;
+
+				//10초 증가 trade money
+				if(object->iReal1SecTradeMoney[9] != 0){
+					i10SecTMoney = object->iReal1SecTradeMoney[0] - object->iReal1SecTradeMoney[9];
+				}
+
+				//-
+				//1초 ratio
+				for(int k=9; k>=1; k--){
+					object->dReal1SecRatio[k] = object->dReal1SecRatio[k-1];
+				}
+
+				object->dReal1SecRatio[0] = dRealRatio;
+
+				//10초 증가 ratio
+				if(object->dReal1SecRatio[9] != 0){
+					dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[9];
+				}
+
+
+                //-
+                //자체 이벤트
+				object->iReal1SecChanged = 1;
+
+
+				//-
+				//log
+				sTemp1.printf(L"%.2f", dRatioDelta);
+
+				DebugLog( sStockCode ,
+					" "+sRealMoney +
+					", 1sec_tmoney:"+ IntToStr(object->iReal1SecTradeMoney[0]) +
+                    ", 10sec_tmoney:"+ IntToStr(i10SecTMoney) +
+					", 10sec_ratio_delta:"+ sTemp1
+					);
+
+				//-
+				//init
+				object->iReal1SecMesuSum = 0;
+				object->iReal1SecMedoSum = 0;
+
+			}//1sec changed
+
+
+            //-
+			//거래대금 누적
+			if(object->iRealTradeMoneyOLD != 0){//처음 제외
+
+				if(iSign == 1){//매수 sum
+					object->iReal1SecMesuSum = object->iReal1SecMesuSum + (iRealTradeMoney - object->iRealTradeMoneyOLD);
+				}
+				else{//매도 sum
+					object->iReal1SecMedoSum = object->iReal1SecMedoSum + (iRealTradeMoney - object->iRealTradeMoneyOLD);
+				}
+			}
+
+			object->iRealTradeMoneyOLD = iRealTradeMoney;
+
+
+
+
+
+		}
+    }
+
+
+	/*
+    //save real data
+	DebugLog( sStockCode ,
+		sTime +
+		" "+sRealMoney +
+		", R:"+ sRealRatio +
+		", M:"+ sRealTradeMoney +
+		", V:"+ sRealVolume +
+		", C:"+ sRealChegyul
+		);
+	*/
+
+}
