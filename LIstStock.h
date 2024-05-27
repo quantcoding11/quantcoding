@@ -44,6 +44,8 @@ public:
 	int iReal1SecTradeMoney[10];
 	double dReal1SecRatio[10];
 
+	int iReal10SecTradeMoneyDelta;
+	double dReal10SecRatioDelta;
 
 	int iBuyTargetPrice;
 	int iBuyTargetVolume;

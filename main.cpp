@@ -6,6 +6,7 @@
 #include "main.h"
 #include "kiwoom_form.h"
 #include "kiwoom_thread.h"
+#include "pattern1_thread.h"
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -248,6 +249,9 @@ void __fastcall TFormMain::FormShow(TObject *Sender)
 	g_ThreadKiwoom->Start();
 
 
+	//pattern1 thread start
+	g_Pattern1_Thread = new Pattern1_Thread(true);
+	g_Pattern1_Thread->Start();
 
 }
 //---------------------------------------------------------------------------

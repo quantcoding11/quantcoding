@@ -354,10 +354,15 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
                 //매수 강세명 +, 매도 강세면 -
 				object->iReal1SecTradeMoney[0] = object->iReal1SecMesuSum - object->iReal1SecMedoSum;
 
-				//10초 증가 trade money
-				if(object->iReal1SecTradeMoney[9] != 0){
-					i10SecTMoney = object->iReal1SecTradeMoney[0] - object->iReal1SecTradeMoney[9];
+
+				//10초 증가 trade money => 수정했습니다.
+                i10SecTMoney = 0;
+				for(int k=0; k<10; k++){
+					i10SecTMoney = i10SecTMoney + object->iReal1SecTradeMoney[k];
 				}
+
+				object->iReal10SecTradeMoneyDelta = i10SecTMoney;
+
 
 				//-
 				//1초 ratio
@@ -372,6 +377,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 					dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[9];
 				}
 
+				object->dReal10SecRatioDelta = dRatioDelta;
 
                 //-
                 //자체 이벤트
@@ -419,9 +425,9 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
     }
 
 
-	/*
+    /*
     //save real data
-	DebugLog( sStockCode ,
+	DebugLog( sStockCode,
 		sTime +
 		" "+sRealMoney +
 		", R:"+ sRealRatio +
