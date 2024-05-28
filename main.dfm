@@ -3,22 +3,22 @@ object FormMain: TFormMain
   Top = 0
   Caption = 'QunatCoding'
   ClientHeight = 648
-  ClientWidth = 1006
+  ClientWidth = 802
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
-  Font.Height = -12
+  Font.Height = -16
   Font.Name = #44404#47548#52404
   Font.Style = []
   Menu = MainMenu1
   Position = poDesktopCenter
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
-  TextHeight = 12
+  TextHeight = 16
   object Button1: TButton
     Left = 24
     Top = 24
-    Width = 121
+    Width = 145
     Height = 25
     Caption = #53412#50880#51613#44428' '#47196#44536#51064
     TabOrder = 0
@@ -34,7 +34,7 @@ object FormMain: TFormMain
     object Button2: TButton
       Left = 25
       Top = 32
-      Width = 120
+      Width = 152
       Height = 25
       Caption = #51312#44148#49885' '#44032#51256#50724#44592
       TabOrder = 0
@@ -115,13 +115,29 @@ object FormMain: TFormMain
   object Memo1: TMemo
     Left = 0
     Top = 559
-    Width = 1006
+    Width = 802
     Height = 89
     Align = alBottom
     ScrollBars = ssBoth
     TabOrder = 2
     ExplicitTop = 558
-    ExplicitWidth = 1002
+    ExplicitWidth = 798
+  end
+  object GroupBox2: TGroupBox
+    Left = 520
+    Top = 80
+    Width = 249
+    Height = 233
+    Caption = ' '#44553#46321#51452' detect'
+    TabOrder = 3
+    object Memo2: TMemo
+      Left = 19
+      Top = 34
+      Width = 206
+      Height = 174
+      ScrollBars = ssBoth
+      TabOrder = 0
+    end
   end
   object MainMenu1: TMainMenu
     Left = 200
@@ -131,6 +147,10 @@ object FormMain: TFormMain
       object N1: TMenuItem
         Caption = #53412#50880' '#54868#47732' '#48372#44592
         OnClick = N1Click
+      end
+      object test1: TMenuItem
+        Caption = 'test'
+        OnClick = test1Click
       end
     end
   end

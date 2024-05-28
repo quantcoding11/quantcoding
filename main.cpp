@@ -41,9 +41,11 @@ void __fastcall TFormMain::FormCloseQuery(TObject *Sender, bool &CanClose)
 
 void __fastcall TFormMain::Button1Click(TObject* Sender)
 {
+
 	//로그인
 	FormKiwoom->Show();
 	FormKiwoom->KHOpenAPI1->CommConnect();
+
 }
 //---------------------------------------------------------------------------
 
@@ -256,6 +258,38 @@ void __fastcall TFormMain::FormShow(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TFormMain::ChangeHTSCode(String sCode)
+{
+	//키움증권 hts code를 변경한다
+
+	HWND handle1 = FindWindow(L"_NKHeroMainClass", NULL);
+	HWND handle2 = FindWindowEx(handle1 , NULL, L"MDIClient", NULL);
+	HWND handle3 = FindWindowEx(handle2 , NULL, NULL, L"[0101] 키움현재가");
+	HWND handle4 = FindWindowEx(handle3 , NULL, L"AfxFrameOrView110", NULL);
+	HWND handle5 = FindWindowEx(handle4 , NULL, L"AfxWnd110", NULL);
+
+	HWND handle6 = FindWindowEx(handle5 , NULL, L"AfxWnd110", NULL);
+	HWND handle7 = FindWindowEx(handle5 , handle6, L"AfxWnd110", NULL);
+	HWND handle8 = FindWindowEx(handle5 , handle7, L"AfxWnd110", NULL);
+	HWND handle9 = FindWindowEx(handle5 , handle8, L"AfxWnd110", NULL);
+	HWND handle10 = FindWindowEx(handle5 , handle9, L"AfxWnd110", NULL);
+	HWND handle11 = FindWindowEx(handle5 , handle10, L"AfxWnd110", NULL);
+	HWND handle12 = FindWindowEx(handle5 , handle11, L"AfxWnd110", NULL);
+
+	HWND handle13 = FindWindowEx(handle12 , NULL, L"AfxWnd110", NULL);
+	HWND handle14 = FindWindowEx(handle13 , NULL, L"Edit", NULL);
+
+	SendMessage(handle14, 0x000C, 0 ,LPARAM(PChar(sCode.c_str())));
+	SendMessage(handle14, 0x0100, 0x0D, 0);
+
+}
+
+//---------------------------------------------------------------------------
 
 
+void __fastcall TFormMain::test1Click(TObject *Sender)
+{
+    ChangeHTSCode("005930");
+}
+//---------------------------------------------------------------------------
 

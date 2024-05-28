@@ -46,8 +46,14 @@ void __fastcall Pattern1_Thread::Execute()
 				if(object->iReal1SecChanged == 1){//자체 이벤트
 					object->iReal1SecChanged = 0;
 
+                    //급등주 패턴
 					if(	(object->iReal10SecTradeMoneyDelta >= 200) && //10sec trade money 2억
 						(object->dReal10SecRatioDelta >= 1.5)){ //10sec ratio delta 1.5%
+
+						FormMain->Memo2->Lines->Add(dtNow.FormatString("hh:nn:ss") +" "+ object->sStockName);
+
+						//키움hts 종목 변경
+						FormMain->ChangeHTSCode(object->sStockCode);
 
 						sTemp1.printf(L"%.2f", object->dReal10SecRatioDelta);
 						FormMain->AddLog("급등 > "+ dtNow.FormatString("hh:nn:ss") +" "+

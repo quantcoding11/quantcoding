@@ -27,6 +27,9 @@ __published:	// IDE-managed Components
 	TMainMenu *MainMenu1;
 	TMenuItem *file1;
 	TMenuItem *N1;
+	TGroupBox *GroupBox2;
+	TMemo *Memo2;
+	TMenuItem *test1;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall StringGridListClick(TObject *Sender);
@@ -35,6 +38,7 @@ __published:	// IDE-managed Components
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall N1Click(TObject *Sender);
 	void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
+	void __fastcall test1Click(TObject *Sender);
 
 
 
@@ -63,6 +67,8 @@ public:		// User declarations
 	void __fastcall RequestCondition(String sNo, String sName);
 
 	void __fastcall UpdateConditionItem(String sNo, String sConditionName, String sCode);
+
+	void __fastcall ChangeHTSCode(String sCode);
 
 	void __fastcall AddLog(String sMsg);
 
