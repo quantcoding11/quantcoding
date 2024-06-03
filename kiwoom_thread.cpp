@@ -330,6 +330,11 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 				iRealMoney = iRealMoney *-1;
 			}
 
+			//tick count sum
+			if(iRealVolume != 1){ //1제외
+				object->iReal1SecTickSum++;
+			}
+
 			//real data
 			object->iRealMoney = iRealMoney;
 			object->dRealRatio = dRealRatio;
@@ -379,6 +384,31 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 
 				object->dReal10SecRatioDelta = dRatioDelta;
 
+				//5초 증가 ratio
+				if(object->dReal1SecRatio[4] != 0){
+					dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[4];
+				}
+				else{
+					if(object->dReal1SecRatio[3] != 0){
+						dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[3];
+					}
+					else{
+						if(object->dReal1SecRatio[2] != 0){
+							dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[2];
+						}
+						else{
+							if(object->dReal1SecRatio[1] != 0){
+								dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[1];
+							}
+						}
+					}
+				}
+
+				object->dRealUpRatioDelta = dRatioDelta;
+
+				//tick
+				object->iReal1SecTickCount = object->iReal1SecTickSum;
+
                 //-
                 //자체 이벤트
 				object->iReal1SecChanged = 1;
@@ -399,6 +429,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 				//init
 				object->iReal1SecMesuSum = 0;
 				object->iReal1SecMedoSum = 0;
+                object->iReal1SecTickSum = 0;
 
 			}//1sec changed
 

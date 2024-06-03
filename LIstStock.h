@@ -46,6 +46,17 @@ public:
 
 	int iReal10SecTradeMoneyDelta;
 	double dReal10SecRatioDelta;
+	double dRealUpRatioDelta;
+
+
+	//tick count
+	volatile int iReal1SecTickSum;
+	int iReal1SecTickCount;
+
+	//silent
+	bool bEvent1SecCheck;
+	int iEvent1SecSilentCount;
+	int iEventNowSec;
 
 	int iBuyTargetPrice;
 	int iBuyTargetVolume;
@@ -60,6 +71,10 @@ public:
 
 
 	bool bSellTry;
+
+    //장초반 급등주 찾기
+	bool bPattern1Find;
+	bool bPattern1Clear;
 
 
 

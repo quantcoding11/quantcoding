@@ -7,6 +7,9 @@
 #include "kiwoom_form.h"
 #include "kiwoom_thread.h"
 #include "pattern1_thread.h"
+#include "nh_form.h"
+
+#include <iniFiles.hpp>
 
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -29,9 +32,15 @@ __fastcall TFormMain::~TFormMain()
 //---------------------------------------------------------------------------
 void __fastcall TFormMain::N1Click(TObject *Sender)
 {
-    FormKiwoom->Show();
+	FormKiwoom->Show();
 }
 //---------------------------------------------------------------------------
+void __fastcall TFormMain::nhClick(TObject *Sender)
+{
+	FormNH->Show();
+}
+//---------------------------------------------------------------------------
+
 
 void __fastcall TFormMain::FormCloseQuery(TObject *Sender, bool &CanClose)
 {
@@ -243,6 +252,25 @@ void __fastcall TFormMain::FormShow(TObject *Sender)
 	sPath = "Log\\" + Now().FormatString("yyyymmdd");
 	CreateDirectory(sPath.c_bstr(), NULL);
 
+    /*
+	//nh ·Î±×ÀÎ
+	AnsiString sNHID, sNHPass, sNHCert;
+	TIniFile* fIni = new TIniFile(g_AppDir + "config.ini");
+
+	try {
+		sNHID = fIni->ReadString("nh", "id", "");
+		sNHPass = fIni->ReadString("nh", "pass", "");
+		sNHCert = fIni->ReadString("nh", "cert", "");
+	}
+	__finally {
+		delete fIni;
+	}
+
+	FormNH->LoadDLL();
+	Sleep(100);
+	FormNH->ConnectNH(sNHID, sNHPass, sNHCert);
+	*/
+
 
 	g_StockList = new TStocks();
 
@@ -286,10 +314,12 @@ void __fastcall TFormMain::ChangeHTSCode(String sCode)
 
 //---------------------------------------------------------------------------
 
-
-void __fastcall TFormMain::test1Click(TObject *Sender)
+void __fastcall TFormMain::add1Click(TObject *Sender)
 {
     ChangeHTSCode("005930");
 }
 //---------------------------------------------------------------------------
+
+
+
 

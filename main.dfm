@@ -148,9 +148,16 @@ object FormMain: TFormMain
         Caption = #53412#50880' '#54868#47732' '#48372#44592
         OnClick = N1Click
       end
-      object test1: TMenuItem
-        Caption = 'test'
-        OnClick = test1Click
+      object nh: TMenuItem
+        Caption = 'NH '#54868#47732' '#48372#44592
+        OnClick = nhClick
+      end
+    end
+    object test2: TMenuItem
+      Caption = 'test'
+      object add1: TMenuItem
+        Caption = 'add'
+        OnClick = add1Click
       end
     end
   end

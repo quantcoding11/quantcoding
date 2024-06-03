@@ -29,7 +29,9 @@ __published:	// IDE-managed Components
 	TMenuItem *N1;
 	TGroupBox *GroupBox2;
 	TMemo *Memo2;
-	TMenuItem *test1;
+	TMenuItem *nh;
+	TMenuItem *test2;
+	TMenuItem *add1;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall StringGridListClick(TObject *Sender);
@@ -38,7 +40,8 @@ __published:	// IDE-managed Components
 	void __fastcall FormShow(TObject *Sender);
 	void __fastcall N1Click(TObject *Sender);
 	void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
-	void __fastcall test1Click(TObject *Sender);
+	void __fastcall add1Click(TObject *Sender);
+	void __fastcall nhClick(TObject *Sender);
 
 
 
