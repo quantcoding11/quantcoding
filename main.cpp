@@ -252,24 +252,6 @@ void __fastcall TFormMain::FormShow(TObject *Sender)
 	sPath = "Log\\" + Now().FormatString("yyyymmdd");
 	CreateDirectory(sPath.c_bstr(), NULL);
 
-    /*
-	//nh ·Î±×ÀÎ
-	AnsiString sNHID, sNHPass, sNHCert;
-	TIniFile* fIni = new TIniFile(g_AppDir + "config.ini");
-
-	try {
-		sNHID = fIni->ReadString("nh", "id", "");
-		sNHPass = fIni->ReadString("nh", "pass", "");
-		sNHCert = fIni->ReadString("nh", "cert", "");
-	}
-	__finally {
-		delete fIni;
-	}
-
-	FormNH->LoadDLL();
-	Sleep(100);
-	FormNH->ConnectNH(sNHID, sNHPass, sNHCert);
-	*/
 
 
 	g_StockList = new TStocks();
