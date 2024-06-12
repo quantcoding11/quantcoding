@@ -7,6 +7,10 @@
 #include <Vcl.Controls.hpp>
 #include <Vcl.StdCtrls.hpp>
 #include <Vcl.Forms.hpp>
+#include <Vcl.ExtCtrls.hpp>
+
+#include "global.h"
+#include "ListStock.h"
 //---------------------------------------------------------------------------
 
 
@@ -123,6 +127,10 @@ __published:	// IDE-managed Components
 	TButton *Button8;
 	TButton *Button9;
 	TButton *Button10;
+	TTimer *Timer1;
+	TButton *Button11;
+	TButton *Button12;
+	TLabel *LabelItem;
 	void __fastcall Button1Click(TObject *Sender);
 	void __fastcall Button2Click(TObject *Sender);
 	void __fastcall Button3Click(TObject *Sender);
@@ -133,6 +141,9 @@ __published:	// IDE-managed Components
 	void __fastcall Button8Click(TObject *Sender);
 	void __fastcall Button9Click(TObject *Sender);
 	void __fastcall Button10Click(TObject *Sender);
+	void __fastcall Button11Click(TObject *Sender);
+	void __fastcall Timer1Timer(TObject *Sender);
+	void __fastcall Button12Click(TObject *Sender);
 private:	// User declarations
 
 //add
@@ -214,6 +225,12 @@ public:		// User declarations
 
 	void __fastcall LoadDLL();
 	void __fastcall ConnectNH(AnsiString sID, AnsiString sPass, AnsiString sPublic);
+
+	void __fastcall GetQuery(AnsiString sCode, int iTRID);
+
+	void __fastcall AttatchKOSPI(AnsiString sCode, int iCount);
+	void __fastcall AttatchKOSDAQ(AnsiString sCode, int iCount);
+
 
 	void __fastcall AddLog(String sMsg);
 

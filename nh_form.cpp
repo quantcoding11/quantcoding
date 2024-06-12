@@ -4,6 +4,7 @@
 #pragma hdrstop
 
 #include "nh_form.h"
+#include "nh_thread.h"
 #include "main.h"
 #include "trio_inv.h"
 #include "trio_ord.h"
@@ -25,11 +26,11 @@ const	int	TRID_c8104	=8104;
 
 const	int	TRID_c8201	=8201;
 
-const	int	TRID_p1003	= 1003;
-const	int	TRID_s4101	= 4101;
+const	int	TRID_p1003	= 11003;
+const	int	TRID_s4101	= 14101;
 
-const	int	TAG1_KOSPI	= 5001;
-const	int	TAG1_KOSDAQ	= 5002;
+const	int	TAG1_KOSPI	= 15001;
+const	int	TAG1_KOSDAQ	= 15002;
 
 
 
@@ -248,10 +249,18 @@ void __fastcall TFormNH::OnWmReceivesise( OUTDATABLOCK* pSiseData )
 		sOpen = ss.SubString(0, 7);
 
 
-		AddLog(sCode +" price:"+ sPrice +", vol:"+ sVolume +", chrate:"+ sSign+" "+sChrate + ", change:"+ sChange+ ", move:"+ sMoVolume+
+		g_ThreadNH->UpdateRealData(sCode, sTime, sPrice, sSign, sChrate, sChange, sVolume, sMoVolume, sMedoHoga, sMesuHoga);
+
+
+
+		/*
+		DebugLog( sCode, +" price:"+ sPrice +", vol:"+ sVolume +", chrate:"+ sSign+" "+sChrate + ", change:"+ sChange+ ", move:"+ sMoVolume+
 
 			", medo:"+ sMedoHoga +", mesu:"+sMesuHoga +
 			", avg:"+ sAvgPrice + ", open:"+ sOpen  + ", jang:"+ sJanggubun);
+		*/
+
+
 	}
 	else if(ss.SubString(1,2) == "d2"){//실시간 체결
 		Td2OutBlock*	pd2	=(Td2OutBlock*)(pSiseData->pData->szData + 3);
@@ -333,60 +342,63 @@ void __fastcall TFormNH::OnWmReceivedata( OUTDATABLOCK* pOutData )
 	String ss;
 	String s1;
 
-	String sHotTime;
 	String sCode;
 	String sName;
-    String sName2;
+	String sName2;
 	String sPrice;
 	String sVolume;
 
 	String sSign;
 	String sRatio;
 
-	String sHigh;
-	String sLow;
-
-	String sMedoVol;
-	String sMesuVol;
-
-	String sForeignMedo;
-	String sForeignMesu;
-
-
-	String sTradeRate;//회전율
-	String sVolRate;//전일 거량 대비 비율
-
-	String sMesuSum;
-	String sMedoSum;
-	String sTradeMoney;
-
-	String sYesterdayMoney;
-	String sVIHigh;
-    String sVIRecPrice;
 	String sKOSPI;
 	String sSichong;
-
-	String sOffer;
-	String sBid;
-
-	String sOpen;
-	String sOpenSign;
-	String sOpenRate;
-
-	String UpPrice;
-	String CRate;
-	String LRate;
+	String sYesterdayMoney;
 
 
-
-	String sMedoHogaMoney[11];
-	String sMedoHogaVolume[11];
-
-	static int index = 0;
+//	static int index = 0;
 
 
 	if((pOutData->TrIndex >= TRID_c1101) && //response
-		(pOutData->TrIndex <= TRID_c1101 +10)){
+		(pOutData->TrIndex <= TRID_c1101 +5000)){
+
+		ss = pOutData->pData->szBlockName;
+		if(ss == "c1101OutBlock"){
+
+			Tc1101OutBlock*	pc1101outblock	=(Tc1101OutBlock*)pOutData->pData->szData;
+
+			ss = pc1101outblock->code;
+			sCode = ss.SubString(0, 6);
+
+//			ss = pc1101outblock->hname;
+//			sName = ss.SubString(0, 13);
+//			sName = sName.Trim();
+
+			ss = pc1101outblock->hnamez21;
+			sName2 = ss.SubString(0, 15);
+			sName2 = sName2.Trim();
+
+			ss = pc1101outblock->price;
+			sPrice = ss.SubString(0, 7);
+
+			ss = pc1101outblock->volume;
+			sVolume = ss.SubString(0, 10);
+
+			ss = pc1101outblock->chrate;
+			sRatio = ss.SubString(0, 5); //xxx.xx
+
+			ss = pc1101outblock->prepricez7;
+			sYesterdayMoney = ss.SubString(0, 7);
+
+			ss = pc1101outblock->sosokz6_1;
+			sKOSPI = ss.SubString(0, 3);
+
+
+			g_ThreadNH->UpdateStockData(sCode, sName2, sYesterdayMoney, sKOSPI);
+
+			AddLog(sCode +" "+ sName2 +" "+ sKOSPI +", price"+ sPrice +	", vol:"+ sVolume );
+
+		}
 
 
 	}
@@ -1101,3 +1113,111 @@ void __fastcall TFormNH::Button10Click(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TFormNH::Button11Click(TObject *Sender)
+{
+//종목마스타기본자료
+
+	Timer1->Enabled = true;
+
+//	GetQuery("005930");
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TFormNH::Timer1Timer(TObject *Sender)
+{
+//timer
+	static int count = 0;
+	static volatile int index = 0;
+	TStock* object;
+
+
+	for (int i = count; i < count+100; i++) {
+		if(index < g_StockList->objectList->Count){
+			object = (TStock*)g_StockList->objectList->Items[i];
+
+			if(object != NULL){
+				GetQuery(object->sStockCode, index++);
+			}
+        }
+	}
+
+	count = count +100; //100개씩 요청
+
+	if(index > g_StockList->objectList->Count){
+		FormMain->AddLog("request finish "+ IntToStr(index) );
+
+		Timer1->Enabled = false;
+		count = 0;
+		index = 0;
+	}
+
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TFormNH::GetQuery(AnsiString sCode, int iTRID)
+{
+
+	Tc1101InBlock	c1101inblock;
+	memset(&c1101inblock,0x20,sizeof(Tc1101InBlock));
+
+	AnsiString form;
+
+
+	form = "k";
+
+	strncpy(c1101inblock.formlang, form.c_str(), form.Length());
+	strncpy(c1101inblock.code, sCode.c_str(), sCode.Length());
+
+
+	//주식 현재가 조회
+	Query(this->Handle, TRID_c1101 + iTRID, "c1101", (char*)&c1101inblock, sizeof( Tc1101InBlock));
+}
+
+//---------------------------------------------------------------------------
+
+void __fastcall TFormNH::Button12Click(TObject *Sender)
+{
+//실시간
+
+	TStock* object;
+	int iKospi = 0;
+	int iKosdaq = 0;
+
+	for (int i = 0; i < g_StockList->objectList->Count; i++){
+		object = (TStock*)g_StockList->objectList->Items[i];
+
+		if(object->sKOSPI_KOSDAQ == "KOSPI"){
+			iKospi++;
+
+			AttatchKOSPI(object->sStockCode, iKospi);
+		}
+		else if(object->sKOSPI_KOSDAQ == "KOSDAQ"){
+			iKosdaq++;
+
+			AttatchKOSDAQ(object->sStockCode, iKosdaq);
+		}
+	}
+
+
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFormNH::AttatchKOSPI(AnsiString sCode, int iCount)
+{
+	char *c_code;
+	c_code = sCode.c_str();
+
+	Attach(this->Handle, "j8", c_code,6,6 *iCount);
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TFormNH::AttatchKOSDAQ(AnsiString sCode, int iCount)
+{
+	char *c_code;
+	c_code = sCode.c_str();
+
+	Attach(this->Handle, "k8", c_code,6,6 *iCount);
+
+}
+
+//---------------------------------------------------------------------------

@@ -3,7 +3,7 @@ object FormNH: TFormNH
   Top = 0
   Caption = 'FormNH'
   ClientHeight = 566
-  ClientWidth = 624
+  ClientWidth = 653
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,11 +11,18 @@ object FormNH: TFormNH
   Font.Name = 'Segoe UI'
   Font.Style = []
   TextHeight = 15
+  object LabelItem: TLabel
+    Left = 544
+    Top = 252
+    Width = 6
+    Height = 15
+    Caption = '0'
+  end
   object Memo1: TMemo
     Left = 42
-    Top = 360
+    Top = 408
     Width = 535
-    Height = 177
+    Height = 129
     ScrollBars = ssVertical
     TabOrder = 0
   end
@@ -146,7 +153,7 @@ object FormNH: TFormNH
   object GroupBox2: TGroupBox
     Left = 352
     Top = 80
-    Width = 225
+    Width = 257
     Height = 130
     Caption = #51648#49688
     TabOrder = 4
@@ -186,5 +193,29 @@ object FormNH: TFormNH
       TabOrder = 3
       OnClick = Button10Click
     end
+  end
+  object Button11: TButton
+    Left = 376
+    Top = 248
+    Width = 145
+    Height = 25
+    Caption = #51333#47785#47560#49828#53440#44592#48376#51088#47308
+    TabOrder = 5
+    OnClick = Button11Click
+  end
+  object Button12: TButton
+    Left = 376
+    Top = 288
+    Width = 145
+    Height = 25
+    Caption = #49892#49884#44036' '#45936#51060#53552' '#50836#52397
+    TabOrder = 6
+    OnClick = Button12Click
+  end
+  object Timer1: TTimer
+    Enabled = False
+    OnTimer = Timer1Timer
+    Left = 560
+    Top = 288
   end
 end
