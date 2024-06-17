@@ -5,6 +5,7 @@
 
 #include "nh_thread.h"
 #include "nh_form.h"
+#include "candle_thread.h"
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
 
@@ -98,20 +99,24 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 	String sTemp;
 	int iTemp;
 
+	int iTMoney;
+	unsigned __int64 tMoney;
+
+	String sTimeMin;
+
 	dtNow = Now();
 	iNowSec = dtNow.FormatString("hhmmss").ToInt();
 
-//	iRealMoney = StrToInt(sRealMoney);
-//	dRealRatio = StrToFloat(sRealRatio);
-	//iRealTradeMoney = StrToInt(sRealTradeMoney);
+
 	iRealVolume = StrToInt(sRealVolume);
 	iRealMedo1 = StrToInt(sRealMedo1);
 	iRealMesu1 = StrToInt(sRealMesu1);
-	//dRealChegyul = StrToFloat(sRealChegyul);
+
 
 	iChange = StrToInt(sChange);
 	iChangeVolume = StrToInt(sMoVolume);
 
+	sTimeMin = sTime.SubString(1,5);
 
 	for (int i = 0; i < g_StockList->objectList->Count; i++) {
 		object = (TStock*)g_StockList->objectList->Items[i];
@@ -127,13 +132,11 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 			if(object->sKOSPI_KOSDAQ == "KOSPI"){
 				if(sSign == "2"){//상승
 					iRealMoney = StrToInt(sRealMoney);
-					object->iRealMoney = iRealMoney;
 
 					dRealRatio = StrToFloat(sRealRatio);
 				}
 				else if(sSign == "5"){//하락
 					iRealMoney = StrToInt(sRealMoney);
-					object->iRealMoney = iRealMoney;
 
 					dRealRatio = StrToFloat(sRealRatio);
 					dRealRatio = dRealRatio * -1;
@@ -143,34 +146,42 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 				if(sRealMoney.SubString(1,1) == "2"){//상승
 					sTemp = sRealMoney.SubString(2, 7);
 					iTemp = StrToInt(sTemp);
-					object->iRealMoney = object->iYesterdayMoney + iTemp;
+					iRealMoney = object->iYesterdayMoney + iTemp;
 
 					dRealRatio = StrToFloat(sRealRatio);
 				}
 				else if(sRealMoney.SubString(1,1) == "5"){//하락
 					sTemp = sRealMoney.SubString(2, 7);
 					iTemp = StrToInt(sTemp);
-					object->iRealMoney = object->iYesterdayMoney - iTemp;
+					iRealMoney = object->iYesterdayMoney - iTemp;
 
 					dRealRatio = StrToFloat(sRealRatio);
 					dRealRatio = dRealRatio * -1;
 				}
 			}
 
-			if(dRealRatio != 0){
+			if(dRealRatio != 0){ //xxx.xxx
 				dRealRatio = dRealRatio / 1000;
 			}
 
+			if(iRealMoney >= iRealMedo1){
+				iSign = 1;//매수
+			}
+			else{
+				iSign = -1;//매도
+            }
+
 
 			//real data
-//			object->iRealMoney = iRealMoney;
+			object->iRealMoney = iRealMoney;
 			object->dRealRatio = dRealRatio;
-			//object->iRealTradeMoney = iRealTradeMoney;
 			object->iRealVolume = iRealVolume;
 			object->iRealMedo1 = iRealMedo1;
 			object->iRealMesu1 = iRealMesu1;
-			//object->dRealChegyul = dRealChegyul;
+			object->sRealTimeMinute = sTimeMin;
 
+            //real time log
+			/*
 			sTemp.printf(L"%.2f",dRealRatio);
 			DebugLog( sStockCode,
 				sTime +
@@ -179,8 +190,17 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 				", V:"+ sRealVolume
 
 				);
+			*/
 
-			/*
+
+			//거래대금
+			tMoney = iRealMoney * iChangeVolume;
+			iTMoney = 0;
+			if(tMoney != 0){
+				tMoney = tMoney / 1000000;
+				iTMoney = (int)tMoney;
+			}
+
 			//1sec changed
 			if(object->iRealNowSec != iNowSec){
 				object->iRealNowSec = iNowSec;
@@ -192,7 +212,7 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 					object->iReal1SecTradeMoney[k] = object->iReal1SecTradeMoney[k-1];
 				}
 
-                //매수 강세명 +, 매도 강세면 -
+				//매수 강세명 +, 매도 강세면 -
 				object->iReal1SecTradeMoney[0] = object->iReal1SecMesuSum - object->iReal1SecMedoSum;
 
 
@@ -220,6 +240,7 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 
 				object->dReal10SecRatioDelta = dRatioDelta;
 
+                /*
 				//5초 증가 ratio
 				if(object->dReal1SecRatio[4] != 0){
 					dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[4];
@@ -234,45 +255,64 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
                 //-
                 //자체 이벤트
 				object->iReal1SecChanged = 1;
+				*/
 
-
+                /*
 				//-
-				//log
+				//1sec log
 				sTemp1.printf(L"%.2f", dRatioDelta);
 
 				DebugLog( sStockCode ,
 					" "+sRealMoney +
 					", 1sec_tmoney:"+ IntToStr(object->iReal1SecTradeMoney[0]) +
-                    ", 10sec_tmoney:"+ IntToStr(i10SecTMoney) +
+					", 10sec_tmoney:"+ IntToStr(i10SecTMoney) +
 					", 10sec_ratio_delta:"+ sTemp1
 					);
+				*/
 
 				//-
 				//init
 				object->iReal1SecMesuSum = 0;
 				object->iReal1SecMedoSum = 0;
-                object->iReal1SecTickSum = 0;
+				object->iReal1SecTickSum = 0;
 
 			}//1sec changed
 
+		//<- check stock code
 
-            //-
+			//-
 			//거래대금 누적
-			if(object->iRealTradeMoneyOLD != 0){//처음 제외
-
-				if(iSign == 1){//매수 sum
-					object->iReal1SecMesuSum = object->iReal1SecMesuSum + (iRealTradeMoney - object->iRealTradeMoneyOLD);
-				}
-				else{//매도 sum
-					object->iReal1SecMedoSum = object->iReal1SecMedoSum + (iRealTradeMoney - object->iRealTradeMoneyOLD);
-				}
+			if(iSign == 1){//매수
+				object->iReal1SecMesuSum = object->iReal1SecMesuSum + iTMoney;
+			}
+			else{//매도
+				object->iReal1SecMedoSum = object->iReal1SecMedoSum + iTMoney;
 			}
 
-			object->iRealTradeMoneyOLD = iRealTradeMoney;
-			*/
+
+			//---
+			//1min update
+			if(object->sRealTimeMinute != object->sRealTimeMinuteOLD){
+				object->sRealTimeMinuteOLD = object->sRealTimeMinute;
+
+				//update
+				g_ThreadCandle->Update1Min(object);
+
+			}
 
 
+			//top
+			if(object->iRealMoney > object->iCandle1MinTop[0]){
+				object->iCandle1MinTop[0] = object->iRealMoney;
+			}
 
+			//bottom
+			if(object->iRealMoney < object->iCandle1MinBottom[0]){
+				object->iCandle1MinBottom[0] = object->iRealMoney;
+			}
+
+			//end
+			object->iCandle1MinEnd[0] = object->iRealMoney;
 
 		}
     }

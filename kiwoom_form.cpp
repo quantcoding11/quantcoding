@@ -371,6 +371,8 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveTrData(TObject* Sender,
 	bool bNull = false;
 	int iNowMoney;
 
+	static int iCount = 0;
+
 	if(RQName == "예상체결등락률상위요청"){
 
 
@@ -431,6 +433,7 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveTrData(TObject* Sender,
 				//add
 				if(g_StockList->CheckAdd(object) == true){
 					g_StockList->Add(object);
+					iCount++;
 				}
 			}
 
@@ -442,6 +445,10 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveTrData(TObject* Sender,
 //					sTop +":"+ svTop +", "+ sBottom +":"+ svBottom +", "+
 //					sVolume +":"+ svVolume +", "+ sChe +":"+ svChe );
 		}
+
+
+		LabelTop->Caption = iCount;
+
 
 		if((iNext != 0) && (bNull == false)){
 			//남아있다
@@ -519,6 +526,60 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveTrData(TObject* Sender,
 		if((iNext != 0) && (bNull == false)){
 			//남아있다
 			RequestTradeMoneyTop(iNext);
+		}
+
+	}
+
+	else if(RQName == "전일거래량상위요청"){
+
+		for(int k=0; k <100; k++){
+			svStockName = KHOpenAPI1->GetCommData(sTrCode, sRQName, k, sStockName);
+			svStockName = svStockName.Trim();
+
+			svStockCode = KHOpenAPI1->GetCommData(sTrCode, sRQName, k, sStockCode);
+			svStockCode = svStockCode.Trim();
+
+			svNowMoney = KHOpenAPI1->GetCommData(sTrCode, sRQName, k, sNowMoney);
+			svNowMoney = svNowMoney.Trim();
+
+			svSign = KHOpenAPI1->GetCommData(sTrCode, sRQName, k, sSign);
+			svSign = svSign.Trim();
+
+			svRatio = KHOpenAPI1->GetCommData(sTrCode, sRQName, k, sRatio);
+			svRatio = svRatio.Trim();
+
+			if(svStockCode == ""){
+				bNull = true;
+			}
+
+			//stock object 추가
+			if(svStockCode != ""){
+				object = new TStock();
+				object->sStockCode = svStockCode;
+				object->sStockName = svStockName;
+
+				if(svNowMoney != ""){
+					object->iNowMoney = StrToInt(svNowMoney);
+				}
+
+				if(svRatio != ""){
+					object->dNowRatio = StrToFloat(svRatio);
+				}
+
+				//add
+				if(g_StockList->CheckAdd(object) == true){
+					g_StockList->Add(object);
+				}
+			}
+
+			FormMain->AddLog(IntToStr(k)+" > "+ sStockCode +":"+ svStockCode +", "+ sStockName +":"+ svStockName +", "+
+					sNowMoney +":"+ svNowMoney +", "+ sSign +":"+ svSign +","+
+					sRatio +":"+ svRatio );
+		}
+
+		if((iNext != 0) && (bNull == false)){
+			//남아있다
+			RequestYesterdayTradeTop(iNext);
 		}
 
 	}
@@ -1155,7 +1216,31 @@ void __fastcall TFormKiwoom::RequestTradeMoneyTop(int index)
 
 
 //---------------------------------------------------------------------------
+void __fastcall TFormKiwoom::Button18Click(TObject *Sender)
+{
+	RequestYesterdayTradeTop(0);
+}
+//---------------------------------------------------------------------------
+void __fastcall TFormKiwoom::RequestYesterdayTradeTop(int index)
+{
+//OPT10031 : 전일거래량상위요청
 
+	WideString strTrCode, strRecordName;
+
+
+
+	strRecordName = "전일거래량상위요청";
+	strTrCode = "OPT10031";
+
+	KHOpenAPI1->SetInputValue("시장구분", "000");
+	KHOpenAPI1->SetInputValue("조회구분", "1");
+	KHOpenAPI1->SetInputValue("순위시작", "0");
+	KHOpenAPI1->SetInputValue("순위끝", "1000");
+
+
+	KHOpenAPI1->CommRqData(strRecordName, strTrCode, index, GetScrNum());
+}
+//---------------------------------------------------------------------------
 void __fastcall TFormKiwoom::Button14Click(TObject *Sender)
 {
 //object list 조회
@@ -1248,4 +1333,5 @@ void __fastcall TFormKiwoom::RequestRealTimeData(String sStockCode)
 
 
 //---------------------------------------------------------------------------
+
 

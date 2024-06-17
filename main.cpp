@@ -8,6 +8,7 @@
 #include "kiwoom_thread.h"
 #include "pattern1_thread.h"
 #include "nh_form.h"
+#include "candle_thread.h"
 
 #include <iniFiles.hpp>
 
@@ -264,6 +265,11 @@ void __fastcall TFormMain::FormShow(TObject *Sender)
 	//pattern1 thread start
 	g_Pattern1_Thread = new Pattern1_Thread(true);
 	g_Pattern1_Thread->Start();
+
+
+	//candle thread start
+	g_ThreadCandle = new ThreadCandle(true);
+    g_ThreadCandle->Start();
 
 }
 //---------------------------------------------------------------------------

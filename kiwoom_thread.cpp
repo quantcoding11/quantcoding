@@ -5,6 +5,7 @@
 
 #include "kiwoom_thread.h"
 #include "main.h"
+#include "candle_thread.h"
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
 
@@ -294,6 +295,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 	String sTemp1;
 	TDateTime dtNow;
 	int iNowSec;
+    String sTimeMin;
 
 
 	dtNow = Now();
@@ -306,7 +308,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 	iRealMedo1 = StrToInt(sRealMedo1);
 	iRealMesu1 = StrToInt(sRealMesu1);
 	dRealChegyul = StrToFloat(sRealChegyul);
-
+	sTimeMin = sTime.SubString(1,5);
 
 	for (int i = 0; i < g_StockList->objectList->Count; i++) {
 		object = (TStock*)g_StockList->objectList->Items[i];
@@ -343,6 +345,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 			object->iRealMedo1 = iRealMedo1;
 			object->iRealMesu1 = iRealMesu1;
 			object->dRealChegyul = dRealChegyul;
+			object->sRealTimeMinute = sTimeMin;
 
 
 			//1sec changed
@@ -388,21 +391,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 				if(object->dReal1SecRatio[4] != 0){
 					dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[4];
 				}
-				else{
-					if(object->dReal1SecRatio[3] != 0){
-						dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[3];
-					}
-					else{
-						if(object->dReal1SecRatio[2] != 0){
-							dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[2];
-						}
-						else{
-							if(object->dReal1SecRatio[1] != 0){
-								dRatioDelta = object->dReal1SecRatio[0] - object->dReal1SecRatio[1];
-							}
-						}
-					}
-				}
+
 
 				object->dRealUpRatioDelta = dRatioDelta;
 
@@ -413,7 +402,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
                 //자체 이벤트
 				object->iReal1SecChanged = 1;
 
-
+                /*
 				//-
 				//log
 				sTemp1.printf(L"%.2f", dRatioDelta);
@@ -424,6 +413,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
                     ", 10sec_tmoney:"+ IntToStr(i10SecTMoney) +
 					", 10sec_ratio_delta:"+ sTemp1
 					);
+				*/
 
 				//-
 				//init
@@ -432,6 +422,8 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
                 object->iReal1SecTickSum = 0;
 
 			}//1sec changed
+
+		//<- check stock code
 
 
             //-
@@ -450,6 +442,28 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 
 
 
+			//---
+			//1min update
+			if(object->sRealTimeMinute != object->sRealTimeMinuteOLD){
+				object->sRealTimeMinuteOLD = object->sRealTimeMinute;
+
+				//update
+				g_ThreadCandle->Update1Min(object);
+
+			}
+
+			//top
+			if(object->iRealMoney > object->iCandle1MinTop[0]){
+				object->iCandle1MinTop[0] = object->iRealMoney;
+			}
+
+			//bottom
+			if(object->iRealMoney < object->iCandle1MinBottom[0]){
+				object->iCandle1MinBottom[0] = object->iRealMoney;
+			}
+
+			//end
+			object->iCandle1MinEnd[0] = object->iRealMoney;
 
 
 		}

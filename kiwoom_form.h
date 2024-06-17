@@ -53,6 +53,8 @@ __published:	// IDE-managed Components
 	TButton *Button15;
 	TButton *Button14;
 	TButton *Button17;
+	TButton *Button18;
+	TLabel *LabelTop;
 	void __fastcall KHOpenAPI1EventConnect(TObject *Sender, long nErrCode);
 	void __fastcall KHOpenAPI1ReceiveConditionVer(TObject *Sender, long lRet, WideString sMsg);
 	void __fastcall KHOpenAPI1ReceiveTrCondition(TObject *Sender, WideString sScrNo,
@@ -86,6 +88,7 @@ __published:	// IDE-managed Components
 	void __fastcall Button14Click(TObject *Sender);
 	void __fastcall Button16Click(TObject *Sender);
 	void __fastcall Button17Click(TObject *Sender);
+	void __fastcall Button18Click(TObject *Sender);
 
 
 
@@ -118,6 +121,7 @@ public:		// User declarations
 
 	void __fastcall RequestExpectTop(int index);
 	void __fastcall RequestTradeMoneyTop(int index);
+	void __fastcall RequestYesterdayTradeTop(int index);
 
 	void __fastcall RequestRealTimeData(String sStockCode);
 

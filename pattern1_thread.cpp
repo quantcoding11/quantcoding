@@ -38,10 +38,16 @@ void __fastcall Pattern1_Thread::Execute()
 	int iNowSec;
 	volatile int iFindIndex = 0;
 
+	double dTemp;
+
+	bool bSilent1MinCandle;
+
+
 	while (!Terminated) {
 
 		if (g_bClosing == false) {
 			dtNow = Now();
+			iNow = dtNow.FormatString("hhmm").ToInt();
 			iNowSec = dtNow.FormatString("hhmmss").ToInt();
 
 			for (int i = 0; i < g_StockList->objectList->Count; i++){
@@ -53,6 +59,7 @@ void __fastcall Pattern1_Thread::Execute()
 					object->bEvent1SecCheck = true;
 
                     /*
+                    //---
                     //급등주 패턴
 					if(	(object->iReal10SecTradeMoneyDelta >= 200) && //10sec trade money 2억
 						(object->dReal10SecRatioDelta >= 1.5)){ //10sec ratio delta 1.5%
@@ -72,55 +79,44 @@ void __fastcall Pattern1_Thread::Execute()
 					}
 					*/
 
+					//---
+					//조용한 1분 캔들 상태에서, 급등
+					if(iNow > 910){ //9:10 부터 체크
 
-					//장초반 급등주 찾기
-					if(
-						(iNow <= 905) && //9:00 ~ 9:01
-						(iFindIndex < 11) && //11개만 찾기
+                        //1분봉 캔들이 1%이상이 존재하면 제외
+						bSilent1MinCandle = true;
+						for(int k=1; k<10; k++){
+							if(object->dCandle1MinLength[k] >= 1.0){
+								bSilent1MinCandle = false;
+							}
+						}
 
-//                        (object->iReal10SecTradeMoneyDelta >= 100) && //1억
-						(object->iReal1SecTickCount >= 20) && //1sec tick
-						(object->dRealUpRatioDelta >= 1.0) && //ratio delta 1.0%
+						if(	(bSilent1MinCandle == true) &&
+							(object->dReal10SecRatioDelta >= 1.5)){ //조용한 캔들 상태에서 급등
 
-						//(object->bPattern1Clear == false) &&
-						(object->bPattern1Find == false) ){
 
-						object->bPattern1Find = true;
-						iFindIndex++;
+							FormMain->Memo2->Lines->Add(dtNow.FormatString("hh:nn:ss") +" "+ object->sStockName);
 
-						FormMain->Memo2->Lines->Add(dtNow.FormatString("hh:nn:ss") +" "+ object->sStockName);
+							//키움hts 종목 변경
+							if(iFindIndex <= 11){
+								FormMain->ChangeHTSCode(object->sStockCode);
+								iFindIndex++;
+							}
 
-						//키움hts 종목 변경
-						FormMain->ChangeHTSCode(object->sStockCode);
-
-						sTemp1.printf(L"%.2f", object->dRealUpRatioDelta);
-						FormMain->AddLog("급등 > "+ dtNow.FormatString("hh:nn:ss") +" "+
-							object->sStockCode +" "+ object->sStockName +
-							", now:"+ IntToStr(object->iRealMoney) +
-							", ratio delta:"+ sTemp1);
+							sTemp1.printf(L"%.2f", object->dReal10SecRatioDelta);
+							FormMain->AddLog("급등 #2 > "+ dtNow.FormatString("hh:nn:ss") +" "+
+								object->sStockCode +" "+ object->sStockName +
+								", now:"+ IntToStr(object->iRealMoney) +
+								", 10sec_money:"+ IntToStr(object->iReal10SecTradeMoneyDelta) +
+								", 10sec_ratio:"+ sTemp1);
+						}
 					}
+
 
 
 				}//iReal1SecChanged
 
 
-				/*
-				if(object->iEventNowSec != iNowSec){
-					object->iEventNowSec = iNowSec;
-
-					//장초반 조용한 종목 체크
-					if(	(object->bEvent1SecCheck == false) &&
-						(object->iRealMoney != 0) ){
-						object->iEvent1SecSilentCount++;
-					}
-
-					if(object->iEvent1SecSilentCount > 3){
-						object->bPattern1Clear = true;
-					}
-
-
-				}//thread 1sec
-				*/
 
 
 			}

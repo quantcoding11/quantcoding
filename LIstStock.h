@@ -22,6 +22,9 @@ public:
 
 	String sOrderCode;
 
+	int iYesterdayMoney;
+	String sKOSPI_KOSDAQ;
+
 	//tr 조회
 	int iNowMoney;
 	double dNowRatio;
@@ -35,6 +38,9 @@ public:
 	int iRealMesu1;
 	double dRealChegyul;
 	int iRealTradeMoneyOLD;
+	double dRealMaxRatio;
+	String sRealTimeMinute;//xx:xx
+	String sRealTimeMinuteOLD;
 
 	//1초처리
 	int iRealNowSec;
@@ -43,11 +49,18 @@ public:
 	int iReal1SecMedoSum;
 	int iReal1SecTradeMoney[10];
 	double dReal1SecRatio[10];
+	double dReal1SecChe[10];
 
 	int iReal10SecTradeMoneyDelta;
 	double dReal10SecRatioDelta;
 	double dRealUpRatioDelta;
 
+	//1분 캔들
+	int iCandle1MinStart[10];
+	int iCandle1MinTop[10];
+	int iCandle1MinBottom[10];
+	int iCandle1MinEnd[10];
+    double dCandle1MinLength[10];
 
 	//tick count
 	volatile int iReal1SecTickSum;
