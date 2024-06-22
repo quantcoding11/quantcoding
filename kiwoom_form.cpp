@@ -512,6 +512,7 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveTrData(TObject* Sender,
 				//add
 				if(g_StockList->CheckAdd(object) == true){
 					g_StockList->Add(object);
+					iCount++;
 				}
 			}
 
@@ -522,6 +523,10 @@ void __fastcall TFormKiwoom::KHOpenAPI1ReceiveTrData(TObject* Sender,
 //					sTop +":"+ svTop +", "+ sBottom +":"+ svBottom +", "+
 //					sVolume +":"+ svVolume +", "+ sChe +":"+ svChe );
 		}
+
+
+		LabelTrade->Caption = iCount;
+
 
 		if((iNext != 0) && (bNull == false)){
 			//남아있다

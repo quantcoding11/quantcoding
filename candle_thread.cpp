@@ -49,22 +49,37 @@ void __fastcall ThreadCandle::Execute()
 	}
 }
 //---------------------------------------------------------------------------
-void __fastcall ThreadCandle::Update1Min(TStock* object)
+void __fastcall ThreadCandle::Update1Min(TStock* object, String sLastTime, int iNow, double dRatio)
 {
 	String sTemp;
+	bool bCheck = false;
 
 	//length
 	object->dCandle1MinLength[0] = GetCandleRatio(object->iCandle1MinStart[0], object->iCandle1MinEnd[0]);
 
+	//ratio
+	object->dCandle1MinRatio[0] = dRatio;
+
 	//log
-	sTemp.printf(L"%.2f", object->dCandle1MinLength[0]);
-	DebugLog( object->sStockCode+"_1min" ,
-		" start:"+ IntToStr(object->iCandle1MinStart[0]) +
-		", top:"+ IntToStr(object->iCandle1MinTop[0]) +
-		", bottom:"+ IntToStr(object->iCandle1MinBottom[0]) +
-		", end:"+ IntToStr(object->iCandle1MinEnd[0]) +
-		", length:"+ sTemp
-		);
+	if(object->iCandle1MinStart[0] != 0){
+
+		sTemp.printf(L"%.2f", object->dCandle1MinLength[0]);
+		DebugLog( object->sStockCode+"_1min" ,
+			" time:"+ sLastTime +
+			", start:"+ IntToStr(object->iCandle1MinStart[0]) +
+			", top:"+ IntToStr(object->iCandle1MinTop[0]) +
+			", bottom:"+ IntToStr(object->iCandle1MinBottom[0]) +
+			", end:"+ IntToStr(object->iCandle1MinEnd[0]) +
+			", length:"+ sTemp
+			);
+
+	}
+
+
+    //valid check
+	if(object->iCandle1MinStart[0] != 0){
+		bCheck = true;
+	}
 
 	//1min candle update
 	for(int k=9; k>=1; k--){
@@ -73,15 +88,20 @@ void __fastcall ThreadCandle::Update1Min(TStock* object)
 		object->iCandle1MinBottom[k] 	= object->iCandle1MinBottom[k-1];
 		object->iCandle1MinEnd[k] 		= object->iCandle1MinEnd[k-1];
 		object->dCandle1MinLength[k] 	= object->dCandle1MinLength[k-1];
+		object->dCandle1MinRatio[k] 	= object->dCandle1MinRatio[k-1];
 	}
 
 
 	//init
-	object->iCandle1MinStart[0] = object->iRealMoney;
-	object->iCandle1MinTop[0] = object->iRealMoney;
-	object->iCandle1MinBottom[0] = object->iRealMoney;
-	object->iCandle1MinEnd[0] = object->iRealMoney;
+	object->iCandle1MinStart[0] = iNow;
+	object->iCandle1MinTop[0] = iNow;
+	object->iCandle1MinBottom[0] = iNow;
+	object->iCandle1MinEnd[0] = iNow;
 
+    //update 1min
+	if(bCheck == true){
+		object->iReal1MinChanged = 1;
+	}
 
 }
 //---------------------------------------------------------------------------

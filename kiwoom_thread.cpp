@@ -308,7 +308,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 	iRealMedo1 = StrToInt(sRealMedo1);
 	iRealMesu1 = StrToInt(sRealMesu1);
 	dRealChegyul = StrToFloat(sRealChegyul);
-	sTimeMin = sTime.SubString(1,5);
+	sTimeMin = sTime.SubString(1,4);//hhmmss
 
 	for (int i = 0; i < g_StockList->objectList->Count; i++) {
 		object = (TStock*)g_StockList->objectList->Items[i];
@@ -445,10 +445,11 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 			//---
 			//1min update
 			if(object->sRealTimeMinute != object->sRealTimeMinuteOLD){
+				//update
+				g_ThreadCandle->Update1Min(object, object->sRealTimeMinuteOLD, object->iRealMoney, object->dRealRatio);
+
 				object->sRealTimeMinuteOLD = object->sRealTimeMinute;
 
-				//update
-				g_ThreadCandle->Update1Min(object);
 
 			}
 

@@ -30,7 +30,7 @@ public:
 	double dNowRatio;
 
 	//real Á¶È¸
-	int iRealMoney;
+	volatile int iRealMoney;
 	double dRealRatio;
 	int iRealTradeMoney;
 	int iRealVolume;
@@ -56,11 +56,13 @@ public:
 	double dRealUpRatioDelta;
 
 	//1ºÐ Äµµé
+    int iReal1MinChanged;
 	int iCandle1MinStart[10];
 	int iCandle1MinTop[10];
 	int iCandle1MinBottom[10];
 	int iCandle1MinEnd[10];
     double dCandle1MinLength[10];
+	double dCandle1MinRatio[10];
 
 	//tick count
 	volatile int iReal1SecTickSum;

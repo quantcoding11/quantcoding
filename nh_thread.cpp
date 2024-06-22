@@ -116,7 +116,7 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 	iChange = StrToInt(sChange);
 	iChangeVolume = StrToInt(sMoVolume);
 
-	sTimeMin = sTime.SubString(1,5);
+	sTimeMin = sTime.SubString(1,5);//hh:mm:ss
 
 	for (int i = 0; i < g_StockList->objectList->Count; i++) {
 		object = (TStock*)g_StockList->objectList->Items[i];
@@ -292,12 +292,12 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 
 			//---
 			//1min update
-			if(object->sRealTimeMinute != object->sRealTimeMinuteOLD){
-				object->sRealTimeMinuteOLD = object->sRealTimeMinute;
+			if(object->sRealTimeMinuteOLD != object->sRealTimeMinute){
 
 				//update
-				g_ThreadCandle->Update1Min(object);
+				g_ThreadCandle->Update1Min(object, object->sRealTimeMinuteOLD, object->iRealMoney, object->dRealRatio);
 
+				object->sRealTimeMinuteOLD = object->sRealTimeMinute;
 			}
 
 

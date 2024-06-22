@@ -55,6 +55,7 @@ __published:	// IDE-managed Components
 	TButton *Button17;
 	TButton *Button18;
 	TLabel *LabelTop;
+	TLabel *LabelTrade;
 	void __fastcall KHOpenAPI1EventConnect(TObject *Sender, long nErrCode);
 	void __fastcall KHOpenAPI1ReceiveConditionVer(TObject *Sender, long lRet, WideString sMsg);
 	void __fastcall KHOpenAPI1ReceiveTrCondition(TObject *Sender, WideString sScrNo,

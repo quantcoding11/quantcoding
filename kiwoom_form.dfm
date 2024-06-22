@@ -2,8 +2,8 @@ object FormKiwoom: TFormKiwoom
   Left = 0
   Top = 0
   Caption = 'FormKiwoom'
-  ClientHeight = 524
-  ClientWidth = 893
+  ClientHeight = 523
+  ClientWidth = 889
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -147,14 +147,12 @@ object FormKiwoom: TFormKiwoom
   end
   object Memo1: TMemo
     Left = 0
-    Top = 435
-    Width = 893
+    Top = 434
+    Width = 889
     Height = 89
     Align = alBottom
     ScrollBars = ssBoth
     TabOrder = 2
-    ExplicitTop = 434
-    ExplicitWidth = 889
   end
   object GroupBox1: TGroupBox
     Left = 304
@@ -302,6 +300,13 @@ object FormKiwoom: TFormKiwoom
       Left = 240
       Top = 40
       Width = 6
+      Height = 15
+      Caption = '0'
+    end
+    object LabelTrade: TLabel
+      Left = 240
+      Top = 80
+      Width = 17
       Height = 15
       Caption = '0'
     end
