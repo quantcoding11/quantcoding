@@ -206,6 +206,11 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 				object->iRealNowSec = iNowSec;
 
 
+				//trade money
+				object->i1MinTradeMoney[0] = object->i1MinTradeMoney[0] + object->iReal1SecMesuSum - object->iReal1SecMedoSum;
+
+
+
 				//-
                 //1초 거래대금
 				for(int k=9; k>=1; k--){
@@ -280,6 +285,28 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 
 		//<- check stock code
 
+
+//---
+			//1min update
+			if(object->sRealTimeMinuteOLD != object->sRealTimeMinute){
+
+				//update
+				g_ThreadCandle->Update1Min(object, object->sRealTimeMinuteOLD, object->iRealMoney, object->dRealRatio);
+
+				object->sRealTimeMinuteOLD = object->sRealTimeMinute;
+
+				//--
+				//1min trade money
+
+				for(int k=10; k>=1; k--){
+					object->i1MinTradeMoney[k] = object->i1MinTradeMoney[k-1];
+				}
+
+				//init
+				object->i1MinTradeMoney[0] = 0;
+			}
+
+
 			//-
 			//거래대금 누적
 			if(iSign == 1){//매수
@@ -290,17 +317,8 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 			}
 
 
-			//---
-			//1min update
-			if(object->sRealTimeMinuteOLD != object->sRealTimeMinute){
 
-				//update
-				g_ThreadCandle->Update1Min(object, object->sRealTimeMinuteOLD, object->iRealMoney, object->dRealRatio);
-
-				object->sRealTimeMinuteOLD = object->sRealTimeMinute;
-			}
-
-
+            //1min data update
 			//top
 			if(object->iRealMoney > object->iCandle1MinTop[0]){
 				object->iCandle1MinTop[0] = object->iRealMoney;
@@ -313,6 +331,8 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 
 			//end
 			object->iCandle1MinEnd[0] = object->iRealMoney;
+
+			object->dCandle1MinRatio[0] = dRealRatio;
 
 		}
     }

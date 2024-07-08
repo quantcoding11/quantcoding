@@ -57,12 +57,27 @@ public:
 
 	//1ºÐ Äµµé
     int iReal1MinChanged;
-	int iCandle1MinStart[10];
-	int iCandle1MinTop[10];
-	int iCandle1MinBottom[10];
-	int iCandle1MinEnd[10];
-    double dCandle1MinLength[10];
-	double dCandle1MinRatio[10];
+	int iCandle1MinStart[30];
+	int iCandle1MinTop[30];
+	int iCandle1MinBottom[30];
+	int iCandle1MinEnd[30];
+	double dCandle1MinLength[30];
+	double dCandle1MinRatio[30];
+
+    int iRealNowMin;
+	int i1MinTradeMoney[11];
+	double d1MinLastChegyul;
+
+	//ÀÌµ¿Æò±Õ
+	double dMovingAvg5[10];
+	double dMovingAvg10[10];
+	double dMovingAvg20[10];
+
+	//bolinger
+	double dBolingerCandleAvg[20];
+	double dBolingerCenter[10];
+	double dBolingerTop[10];
+    double dBolingerBottom[10];
 
 	//tick count
 	volatile int iReal1SecTickSum;

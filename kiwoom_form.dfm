@@ -2,8 +2,8 @@ object FormKiwoom: TFormKiwoom
   Left = 0
   Top = 0
   Caption = 'FormKiwoom'
-  ClientHeight = 523
-  ClientWidth = 889
+  ClientHeight = 522
+  ClientWidth = 885
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,7 @@ object FormKiwoom: TFormKiwoom
   TextHeight = 15
   object KHOpenAPI1: TKHOpenAPI
     Left = 24
-    Top = 24
+    Top = 30
     Width = 100
     Height = 50
     TabOrder = 0
@@ -147,8 +147,8 @@ object FormKiwoom: TFormKiwoom
   end
   object Memo1: TMemo
     Left = 0
-    Top = 434
-    Width = 889
+    Top = 433
+    Width = 885
     Height = 89
     Align = alBottom
     ScrollBars = ssBoth
@@ -306,7 +306,7 @@ object FormKiwoom: TFormKiwoom
     object LabelTrade: TLabel
       Left = 240
       Top = 80
-      Width = 17
+      Width = 6
       Height = 15
       Caption = '0'
     end

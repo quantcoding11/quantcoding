@@ -295,11 +295,13 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 	String sTemp1;
 	TDateTime dtNow;
 	int iNowSec;
+	int iNow;
     String sTimeMin;
 
 
 	dtNow = Now();
 	iNowSec = dtNow.FormatString("hhmmss").ToInt();
+	iNow = dtNow.FormatString("hhmm").ToInt();
 
 	iRealMoney = StrToInt(sRealMoney);
 	dRealRatio = StrToFloat(sRealRatio);
@@ -352,6 +354,9 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 			if(object->iRealNowSec != iNowSec){
 				object->iRealNowSec = iNowSec;
 
+				//trade money
+				object->i1MinTradeMoney[0] = object->i1MinTradeMoney[0] + object->iReal1SecMesuSum - object->iReal1SecMedoSum;
+
 
 				//-
                 //1초 거래대금
@@ -402,7 +407,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
                 //자체 이벤트
 				object->iReal1SecChanged = 1;
 
-                /*
+
 				//-
 				//log
 				sTemp1.printf(L"%.2f", dRatioDelta);
@@ -413,7 +418,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
                     ", 10sec_tmoney:"+ IntToStr(i10SecTMoney) +
 					", 10sec_ratio_delta:"+ sTemp1
 					);
-				*/
+
 
 				//-
 				//init
@@ -425,6 +430,30 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 
 		//<- check stock code
 
+
+			//---
+			//1min update
+			if(object->sRealTimeMinute != object->sRealTimeMinuteOLD){
+				//update
+				g_ThreadCandle->Update1Min(object, object->sRealTimeMinuteOLD, object->iRealMoney, object->dRealRatio);
+
+				object->sRealTimeMinuteOLD = object->sRealTimeMinute;
+
+
+				//--
+				//1min trade money
+
+				for(int k=10; k>=1; k--){
+					object->i1MinTradeMoney[k] = object->i1MinTradeMoney[k-1];
+				}
+
+				//init
+				object->i1MinTradeMoney[0] = 0;
+
+				//1min chegyul
+				object->d1MinLastChegyul = object->dRealChegyul;
+
+			}
 
             //-
 			//거래대금 누적
@@ -442,17 +471,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 
 
 
-			//---
-			//1min update
-			if(object->sRealTimeMinute != object->sRealTimeMinuteOLD){
-				//update
-				g_ThreadCandle->Update1Min(object, object->sRealTimeMinuteOLD, object->iRealMoney, object->dRealRatio);
-
-				object->sRealTimeMinuteOLD = object->sRealTimeMinute;
-
-
-			}
-
+            //1min data update
 			//top
 			if(object->iRealMoney > object->iCandle1MinTop[0]){
 				object->iCandle1MinTop[0] = object->iRealMoney;
@@ -466,7 +485,7 @@ void __fastcall ThreadKiwoom::UpdateRealData(String sStockCode, String sTime, St
 			//end
 			object->iCandle1MinEnd[0] = object->iRealMoney;
 
-
+			object->dCandle1MinRatio[0] = dRealRatio;
 		}
     }
 
