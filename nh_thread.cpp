@@ -34,7 +34,8 @@ void __fastcall ThreadNH::Execute()
 //---------------------------------------------------------------------------
 
 
-void __fastcall ThreadNH::UpdateStockData(String sStockCode, String sStockName, String sYesterday, String sKOSPI)
+void __fastcall ThreadNH::UpdateStockData(String sStockCode, String sStockName, String sYesterday, String sKOSPI,
+	String sPrice, String sForeMedo, String sForeMesu)
 {
 	TStock* object;
 
@@ -47,6 +48,10 @@ void __fastcall ThreadNH::UpdateStockData(String sStockCode, String sStockName, 
 		object = (TStock*)g_StockList->objectList->Items[i];
 
 		if(object->sStockCode == sStockCode){
+
+			object->iNHGet1101 = 1;
+
+
 			if(object->iYesterdayMoney == 0){
 				index++;
 			}
@@ -59,6 +64,23 @@ void __fastcall ThreadNH::UpdateStockData(String sStockCode, String sStockName, 
 			else if(sKOSPI == "코스닥"){
 				object->sKOSPI_KOSDAQ = "KOSDAQ";
 			}
+
+			if(sPrice != ""){
+				object->iNHNowMoney = StrToInt(sPrice);
+			}
+
+			//외국인 매수,매도
+			object->iNHForeMedoOLD = object->iNHForeMedo;
+			object->iNHForeMesuOLD = object->iNHForeMesu;
+
+			if(sForeMedo != ""){
+				object->iNHForeMedo = StrToInt(sForeMedo);
+			}
+
+			if(sForeMesu != ""){
+				object->iNHForeMesu = StrToInt(sForeMesu);
+            }
+
 		}
 
 	}
@@ -351,3 +373,4 @@ void __fastcall ThreadNH::UpdateRealData(String sStockCode, String sTime, String
 	*/
 
 }
+

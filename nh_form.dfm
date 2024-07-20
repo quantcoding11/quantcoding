@@ -2,8 +2,8 @@ object FormNH: TFormNH
   Left = 0
   Top = 0
   Caption = 'FormNH'
-  ClientHeight = 566
-  ClientWidth = 653
+  ClientHeight = 565
+  ClientWidth = 649
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

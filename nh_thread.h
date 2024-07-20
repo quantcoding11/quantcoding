@@ -16,7 +16,8 @@ protected:
 public:
 
 
-	void __fastcall UpdateStockData(String sStockCode, String sStockName, String sYesterday, String sKOSPI);
+	void __fastcall UpdateStockData(String sStockCode, String sStockName, String sYesterday, String sKOSPI,
+        String sPrice, String sForeMedo, String sForeMesu);
 
 
 	void __fastcall UpdateRealData(String sStockCode, String sTime, String sRealMoney, String sSign,

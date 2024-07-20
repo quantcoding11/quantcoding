@@ -355,6 +355,8 @@ void __fastcall TFormNH::OnWmReceivedata( OUTDATABLOCK* pOutData )
 	String sSichong;
 	String sYesterdayMoney;
 
+	String sForeMedo;
+    String sForeMesu;
 
 //	static int index = 0;
 
@@ -394,9 +396,18 @@ void __fastcall TFormNH::OnWmReceivedata( OUTDATABLOCK* pOutData )
 			sKOSPI = ss.SubString(0, 3);
 
 
-			g_ThreadNH->UpdateStockData(sCode, sName2, sYesterdayMoney, sKOSPI);
+			ss = pc1101outblock->N_offvolall;//외국인 매도
+			sForeMedo = ss.SubString(0, 9);
 
-			AddLog(sCode +" "+ sName2 +" "+ sKOSPI +", price"+ sPrice +	", vol:"+ sVolume );
+			ss = pc1101outblock->N_bidvolall;//외국인 매수
+			sForeMesu = ss.SubString(0, 9);
+
+
+
+			g_ThreadNH->UpdateStockData(sCode, sName2, sYesterdayMoney, sKOSPI,
+				sPrice, sForeMedo, sForeMesu);
+
+			//AddLog(sCode +" "+ sName2 +" "+ sKOSPI +", price"+ sPrice +	", vol:"+ sVolume );
 
 		}
 
@@ -805,6 +816,10 @@ bool __fastcall TFormNH::SetAccountNoByIndex	(const char* pszHashOut,int nAccoun
 //---------------------------------------------------------------------------
 void __fastcall TFormNH::AddLog(String sMsg)
 {
+	if(Memo1->Lines->Count > 1000){
+		Memo1->Lines->Clear();
+	}
+
 	Memo1->Lines->Add(sMsg);
 }
 //---------------------------------------------------------------------------
@@ -1143,14 +1158,25 @@ void __fastcall TFormNH::Timer1Timer(TObject *Sender)
 
 	count = count +100; //100개씩 요청
 
-	if(index > g_StockList->objectList->Count){
+	//계속 요청하는 경우
+	if(index >= g_StockList->objectList->Count){
+		count = 0;
+		index = 0;
+
+        //FormMain->AddLog("request finish "+ IntToStr(index) );
+	}
+
+
+	/*
+	//1번만 요청하는 경우
+	if(index >= g_StockList->objectList->Count){
 		FormMain->AddLog("request finish "+ IntToStr(index) );
 
 		Timer1->Enabled = false;
 		count = 0;
 		index = 0;
 	}
-
+	*/
 
 }
 //---------------------------------------------------------------------------
